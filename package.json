@@ -1,0 +1,30 @@
+{
+  "name": "medicineapp",
+  "version": "1.0.0",
+  "description": "An application to manage patients as well as medications",
+  "main": "main.js",
+  "scripts": {
+    "react-start": "cd app && npm start",
+    "electron-start": "wait-on http://localhost:3000 && electron .",
+    "start": "concurrently \"npm run react-start\" \"npm run electron-start\""
+  }
+  ,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RamamonjizafyAndo/MedicineApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RamamonjizafyAndo/MedicineApp/issues"
+  },
+  "homepage": "https://github.com/RamamonjizafyAndo/MedicineApp#readme",
+  "devDependencies": {
+    "electron": "^28.1.1"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0"
+  }
+}
