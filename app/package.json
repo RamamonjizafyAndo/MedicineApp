@@ -9,10 +9,15 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.3.2",
     "bootstrap-icons": "^1.11.3",
+    "concurrently": "^8.2.2",
+    "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "sqlite3": "^5.1.7",
+    "util": "^0.12.5",
+    "wait-on": "^7.2.0"
   },
   "main": "public/electron.js",
   "homepage": "./",
@@ -21,14 +26,15 @@
     "package-win": "electron-builder --dir --win --x64",
     "package-linux": "electron-packager . MedecineApp --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds",
     "build": "craco build",
-    "start": "electron .",
-    "dev": "react-scripts start"
+    "start_electron": "electron .",
+    "start": "npm run build && npm run start_electron"
   },
   "build": {
     "appId": "123456",
     "productName": "Medecine",
     "win": {
-      "target": "nsis"    }
+      "target": "nsis"
+    }
   },
   "eslintConfig": {
     "extends": [
