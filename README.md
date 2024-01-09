@@ -33,7 +33,7 @@ npm i
 ```
 3. Run the application in development
 ```bash
-npm run dev
+npm run start
 ```
 
 ## Building and Packaging
