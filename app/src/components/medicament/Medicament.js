@@ -9,7 +9,7 @@ function Medic() {
                 <div className="navbar-brand">
                     <button className="btn btn-outline-primary">
                     <Link
-              to='/addMedic'
+              to='/medic/addMedic'
               className="nav-link"
               activeClassName="active-link"
               exact

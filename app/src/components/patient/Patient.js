@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import ListePatient from "./liste";
+
 
 function Patient() {
     return (<>
@@ -9,7 +11,7 @@ function Patient() {
                 <div className="navbar-brand">
                     <button className="btn btn-outline-primary">
                     <Link
-              to='/addPatient'
+              to='/patient/addPatient'
               className="nav-link"
               activeClassName="active-link"
               exact
@@ -28,6 +30,9 @@ function Patient() {
                 </div>
             </div>
         </nav>
+        <div className="container-fluid">
+            <ListePatient />
+        </div>
     </>)
 }
 

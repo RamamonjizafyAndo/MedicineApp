@@ -16,9 +16,9 @@ function App() {
       <Routes>
         <Route path='/' element={<Dashboard />}/>
         <Route path='/patient' element={<Patient />} />
-        <Route path='/addPatient' element={<AddPatient />} />
+        <Route path='/patient/addPatient' element={<AddPatient />} />
         <Route path='/medic' element={<Medic />} />
-        <Route path='/addMedic' element={<AddMedic />} />
+        <Route path='/medic/addMedic' element={<AddMedic />} />
         <Route path='/fact' element={<Fact />} />
       </Routes>
     </Sidebar>
