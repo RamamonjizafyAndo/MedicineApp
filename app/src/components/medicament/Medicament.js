@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import ListeMedic from "./liste";
 
 function Medic() {
     return (<>
@@ -28,6 +29,9 @@ function Medic() {
                 </div>
             </div>
         </nav>
+        <div className="container-fluid">
+            <ListeMedic />
+        </div>
     </>)
 }
 
