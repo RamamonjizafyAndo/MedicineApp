@@ -18,7 +18,7 @@ function AddPatient() {
     }
     const onSubmit = (e)=>{
         e.preventDefault();
-        ipcRenderer.send('insert-data', { value1: name, value2: age, value3: sexe });
+        ipcRenderer.send('insert-patient', { value1: name, value2: age, value3: sexe });
         navigate('/patient')
     }
     return (
