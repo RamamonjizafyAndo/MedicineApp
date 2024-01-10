@@ -66,6 +66,11 @@ function createWindow() {
       const insert = db.prepare(`INSERT INTO Patients (namePtn, agePtn, sexePtn) VALUES (?, ?, ?)`);
       insert.run(data.value1, data.value2, data.value3);
     });
+
+    ipcMain.on('insert-medicament', async (event, data) => {
+      const insert = db.prepare(`INSERT INTO Medicaments (nomMed, qtMed, prixMed) VALUES (?, ?, ?)`);
+      insert.run(data.value1, data.value2, data.value3);
+    });
   
     ipcMain.on('select-data', (event, query) => {
       const select = db.prepare(query);
