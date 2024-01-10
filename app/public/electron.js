@@ -4,7 +4,7 @@ const path = require("path");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const { ipcMain } = require('electron');
-const sqlite3 = require('sqlite3').verbose();
+const Database = require('better-sqlite3');
 
 
 let mainWindow;
@@ -19,101 +19,73 @@ function createWindow() {
   // and load the index.html of the app.
   console.log(__dirname);
   mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
-  let db = new sqlite3.Database('./mylocaldb.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
-    if (err) {
-      console.error(err.message);
-    } else {
-      console.log('Connected to the SQLite database.');
-    }
-  });
-
-  db.serialize(() => {
-    db.exec('PRAGMA foreign_keys = ON;');
-    db.run(`CREATE TABLE IF NOT EXISTS Patients (
+  try {
+    let db = new Database('./mylocaldb.db', { verbose: console.log });
+    const createPatientsTable = db.prepare(`CREATE TABLE IF NOT EXISTS Patients (
       idPtn INTEGER PRIMARY KEY AUTOINCREMENT,
       namePtn TEXT NOT NULL,
       agePtn INTEGER NOT NULL,
       sexePtn TEXT NOT NULL
-    )`, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
+    )`);
+    createPatientsTable.run();
 
-    db.run(`CREATE TABLE IF NOT EXISTS BilanPatients(
+    const createBilanTable = db.prepare(`CREATE TABLE IF NOT EXISTS BilanPatients(
       idBln INTEGER PRIMARY KEY AUTOINCREMENT,
       maladie TEXT NOT NULL,
       idPtn INTEGER NOT NULL,
       FOREIGN KEY (idPtn) REFERENCES Patients (idPtn) ON DELETE SET NULL ON UPDATE CASCADE 
-    )`, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
+    )`);
+    createBilanTable.run();
 
-    db.run(`CREATE TABLE IF NOT EXISTS Medicaments(
+    const createMedicTable = db.prepare(`CREATE TABLE IF NOT EXISTS Medicaments(
       idMed INTEGER PRIMARY KEY AUTOINCREMENT,
       nomMed TEXT NOT NULL,
       qtMed INTEGER NOT NULL,
       prixMed REAL NOT NULL
-    )`, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
+    )`);
+    createMedicTable.run();
 
-    db.run(`CREATE TABLE IF NOT EXISTS Ordonnances(
+    const createOrdTable = db.prepare(`CREATE TABLE IF NOT EXISTS Ordonnances(
       idOrd INTEGER PRIMARY KEY AUTOINCREMENT,
       prix INTEGER,
       idPtn INTEGER NOT NULL,
       FOREIGN KEY (idPtn) REFERENCES Patients(idPtn) ON DELETE SET NULL ON UPDATE CASCADE 
-    )`, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
-//Table of medicament in the Ordonnance
-    db.run(`CREATE TABLE IF NOT EXISTS Articles(
-      idArt INTEGER PRIMARY KEY AUTOINCREMENT,
-      idOrd INTEGER NOT NULL,
-      idMed INTEGER NOT NULL,
-      FOREIGN KEY (idOrd) REFERENCES Ordonnances(idOrd) ON DELETE SET NULL ON UPDATE CASCADE,
-      FOREIGN KEY (idMed) REFERENCES Medicaments(idMed) ON DELETE SET NULL ON UPDATE CASCADE 
-    )`, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    })
-  });
+    )`)
+    createOrdTable.run();
 
-  ipcMain.on('insert-data', async (event, data) => {
-    await db.run(`INSERT INTO Patients (namePtn, agePtn, sexePtn) VALUES (?, ?, ?)`, [data.value1, data.value2, data.value3], function(err) {
-      if (err) {
-        return console.log(err.message);
-      }
-      // get the last insert id
-      
+    //Table of medicament in the Ordonnance
+    const createArtiTable = db.prepare(`CREATE TABLE IF NOT EXISTS Articles(
+  idArt INTEGER PRIMARY KEY AUTOINCREMENT,
+  idOrd INTEGER NOT NULL,
+  idMed INTEGER NOT NULL,
+  FOREIGN KEY (idOrd) REFERENCES Ordonnances(idOrd) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (idMed) REFERENCES Medicaments(idMed) ON DELETE SET NULL ON UPDATE CASCADE 
+)`);
+    createArtiTable.run();
+    ipcMain.on('insert-data', async (event, data) => {
+      const insert = db.prepare(`INSERT INTO Patients (namePtn, agePtn, sexePtn) VALUES (?, ?, ?)`);
+      insert.run(data.value1, data.value2, data.value3);
     });
-  });
-
-  ipcMain.on('select-data', async (event, query) => {
-    await db.all(query, [], (err, rows) => {
-      if (err) {
-        throw err;
-      }
+  
+    ipcMain.on('select-data', (event, query) => {
+      const select = db.prepare(query);
+      const rows = select.all();
       event.reply('select-data-reply', rows);
       console.log(rows);
     });
-  });
-
-  app.on('will-quit', () => {
-    db.close((err) => {
-      if (err) {
-        console.error(err.message);
-      }
-      console.log('Closed the database connection.');
+  
+    app.on('will-quit', () => {
+      db.close((err) => {
+        if (err) {
+          console.error(err.message);
+        }
+        console.log('Closed the database connection.');
+      });
     });
-  });
+  } catch (err) {
+    console.log(err);
+  }
+  
 }
 
 // This method will be called when Electron has finished
