@@ -1,0 +1,1 @@
+export const regexAge = /^(1[01][0-9]|[1-9]?[0-9])$/;
