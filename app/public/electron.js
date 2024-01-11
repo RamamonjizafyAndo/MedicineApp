@@ -62,6 +62,7 @@ function createWindow() {
   FOREIGN KEY (idMed) REFERENCES Medicaments(idMed) ON DELETE SET NULL ON UPDATE CASCADE 
 )`);
     createArtiTable.run();
+
     ipcMain.on('insert-patient', async (event, data) => {
       const insert = db.prepare(`INSERT INTO Patients (namePtn, agePtn, sexePtn) VALUES (?, ?, ?)`);
       insert.run(data.value1, data.value2, data.value3);

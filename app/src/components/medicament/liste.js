@@ -6,7 +6,7 @@ function ListeMedic() {
         ipcRenderer.send('select-data', 'SELECT * FROM Medicaments');
         ipcRenderer.on('select-data-reply', (event, response) => {
             setData(response)
-        }, [])
+        }, []);
     }, [])
     return (
         <>
