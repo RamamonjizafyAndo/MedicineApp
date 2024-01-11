@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
+import { Link } from "react-router-dom";
+import ListeFact from "./liste";
 function Fact() {
     return (
         <>
@@ -9,13 +11,13 @@ function Fact() {
                     <div className="navbar-brand">
                         <button className="btn btn-outline-primary">
                             <Link
-                                to='/fact/addOrd'
+                                to='/fact/create'
                                 className="nav-link"
                                 activeClassName="active-link"
                                 exact
                             >
                                 <i className="bi bi-person-plus-fill"></i>{' '}
-                                <span>Ajouter</span>
+                                <span>Créer</span>
                             </Link>
                         </button>
                     </div>
@@ -29,7 +31,7 @@ function Fact() {
                 </div>
             </nav>
             <div className="container-fluid">
-
+                <ListeFact />
             </div>
         </>
     )

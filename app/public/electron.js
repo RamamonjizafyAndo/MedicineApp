@@ -80,6 +80,44 @@ function createWindow() {
       event.reply('select-data-reply', rows);
       console.log(rows);
     });
+
+    function searchData(table, data) {
+      // Construct the base query
+      let query = `SELECT * FROM ${table}`;
+      const conditions = [];
+    
+      // Append conditions based on function arguments
+      data.forEach(value => {
+        if (typeof value.value === "number") {
+          conditions.push(`${value.column} = ${value.value}`);
+        } else if (typeof value.value === "string") {
+          conditions.push(`LOWER(${value.column}) LIKE '%${value.value.toLowerCase()}%'`);
+        } else {
+          conditions.push(`${value.column} = ${value.value}`);
+        }
+      });
+    
+      // Add WHERE clause if there are conditions
+      if (conditions.length > 0) {
+        query += ' WHERE ' + conditions.join(' OR ');
+      }
+    
+      // Execute the query
+      const stmt = db.prepare(query);
+      return stmt.all();
+    }
+    
+
+    ipcMain.on('searchData', async (event, table, data) => {
+      try {
+          const results = searchData(table, data);
+          event.reply('searchDataResponse', results);
+          console.log(results);
+      } catch (error) {
+          console.error('Error in searchData:', error);
+          event.reply('searchDataResponse', []);
+      }
+  });
   
     app.on('will-quit', () => {
       db.close((err) => {

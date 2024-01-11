@@ -8,6 +8,7 @@ import AddMedic from './components/medicament/add';
 import Fact from './components/ordonnance/Fact';
 import AddPatient from './components/patient/add';
 import DetailPatient from './components/patient/detail';
+import CreateFact from './components/ordonnance/add';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path='/medic' element={<Medic />} />
         <Route path='/medic/addMedic' element={<AddMedic />} />
         <Route path='/fact' element={<Fact />} />
+        <Route path='/fact/create' element={<CreateFact />} />
       </Routes>
     </Sidebar>
   );
