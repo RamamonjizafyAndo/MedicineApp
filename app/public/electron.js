@@ -48,6 +48,7 @@ function createWindow() {
     const createOrdTable = db.prepare(`CREATE TABLE IF NOT EXISTS Ordonnances(
       idOrd INTEGER PRIMARY KEY AUTOINCREMENT,
       prix INTEGER,
+      date DATE,
       idPtn INTEGER NOT NULL,
       FOREIGN KEY (idPtn) REFERENCES Patients(idPtn) ON DELETE SET NULL ON UPDATE CASCADE 
     )`)
