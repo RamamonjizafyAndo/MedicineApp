@@ -5,7 +5,7 @@ import Dashboard from './components/Dashboard';
 import Patient from './components/patient/Patient';
 import Medic from './components/medicament/Medicament';
 import AddMedic from './components/medicament/add';
-import Fact from './components/Fact';
+import Fact from './components/ordonnance/Fact';
 import AddPatient from './components/patient/add';
 import DetailPatient from './components/patient/detail';
 
