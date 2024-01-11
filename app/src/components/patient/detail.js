@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
+import BilanPatient from "./bilan";
 function DetailPatient() {
     const [dataPatient, setDataPatient] = useState([]);
     useEffect(() => {
@@ -34,6 +35,7 @@ function DetailPatient() {
                     )
                 })
             }
+            <BilanPatient />
         </>
     )
 }
