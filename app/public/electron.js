@@ -65,18 +65,23 @@ function createWindow() {
     createArtiTable.run();
 
     ipcMain.on('insert-patient', async (event, data) => {
-      const insert = db.prepare(`INSERT INTO Patients (namePtn, agePtn, sexePtn) VALUES (?, ?, ?)`);
-      insert.run(data.value1, data.value2, data.value3);
+      const insertPat = db.prepare(`INSERT INTO Patients (namePtn, agePtn, sexePtn) VALUES (?, ?, ?)`);
+      insertPat.run(data.value1, data.value2, data.value3);
     });
 
-    ipcMain.on('delete-patient', async (event, data) => {
-      const del = db.prepare(`DELETE FROM Patients WHERE idPtn = ?`);
-      del.run(data.value1);
+    ipcMain.on('modif-patient', async (event, data) => {
+      const modifPat = db.prepare(`UPDATE Patients SET namePtn = ?, agePtn = ?, sexePtn = ? WHERE idPtn = ?`);
+      modifPat.run(data.value1, data.value2, data.value3, data.value4);
+    });
+
+    ipcMain.on('modif-patient', async (event, data) => {
+      const delPat = db.prepare(`DELETE FROM Patients WHERE idPtn = ?`);
+      delPat.run(data.value1);
     });
 
     ipcMain.on('insert-medicament', async (event, data) => {
-      const insert = db.prepare(`INSERT INTO Medicaments (nomMed, qtMed, prixMed) VALUES (?, ?, ?)`);
-      insert.run(data.value1, data.value2, data.value3);
+      const insertMed = db.prepare(`INSERT INTO Medicaments (nomMed, qtMed, prixMed) VALUES (?, ?, ?)`);
+      insertMed.run(data.value1, data.value2, data.value3);
     });
   
     ipcMain.on('select-data', (event, query) => {

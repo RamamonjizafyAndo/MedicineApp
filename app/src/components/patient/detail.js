@@ -15,7 +15,8 @@ function DetailPatient() {
     }, [])
     const onDelete = (e) => {
         e.preventDefault();
-        ipcRenderer.send('delete-patient', { value1: localStorage.getItem('idPtn') });
+        ipcRenderer.send('delete-patient', { value1: localStorage.getItem('idPtn') && localStorage.getItem('idPtn') });
+        
         navigate('/patient');
     }
     return (
@@ -36,7 +37,7 @@ function DetailPatient() {
                                         <button className="p-2 g-col-6 btn btn-outline-success">Ordonnance</button>
                                     </p>
                                     <p>
-                                        <button className="p-2 g-col-6 btn btn-outline-primary">Modifier</button>
+                                        <button className="p-2 g-col-6 btn btn-outline-primary" onClick={(e)=>{navigate('/patient/modif')}}>Modifier</button>
                                     </p>
                                     <p>
                                         {

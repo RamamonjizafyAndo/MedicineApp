@@ -9,6 +9,7 @@ import Fact from './components/ordonnance/Fact';
 import AddPatient from './components/patient/add';
 import DetailPatient from './components/patient/detail';
 import CreateFact from './components/ordonnance/add';
+import ModifPatient from './components/patient/modif';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path='/patient' element={<Patient />} />
         <Route path='/patient/addPatient' element={<AddPatient />} />
         <Route path='/patient/detail' element={<DetailPatient />} />
+        <Route path='/patient/modif' element={<ModifPatient />} />
         <Route path='/medic' element={<Medic />} />
         <Route path='/medic/addMedic' element={<AddMedic />} />
         <Route path='/fact' element={<Fact />} />
