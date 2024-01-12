@@ -69,6 +69,11 @@ function createWindow() {
       insert.run(data.value1, data.value2, data.value3);
     });
 
+    ipcMain.on('delete-patient', async (event, data) => {
+      const del = db.prepare(`DELETE FROM Patients WHERE idPtn = ?`);
+      del.run(data.value1);
+    });
+
     ipcMain.on('insert-medicament', async (event, data) => {
       const insert = db.prepare(`INSERT INTO Medicaments (nomMed, qtMed, prixMed) VALUES (?, ?, ?)`);
       insert.run(data.value1, data.value2, data.value3);
