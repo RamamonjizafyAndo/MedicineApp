@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
+import { useNavigate } from "react-router-dom";
 function ListeMedic() {
     const [data, setData] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         ipcRenderer.send('select-data', 'SELECT * FROM Medicaments');
         ipcRenderer.on('select-data-reply', (event, response) => {
             setData(response)
         }, []);
-    }, [])
+    }, []);
+    const detailMed = (e)=>{
+        localStorage.removeItem('idMed');
+        localStorage.setItem('idMed', e.target.id);
+        navigate('/medic/detail');
+    }
     return (
         <>
             <div className="card" >
@@ -21,7 +28,7 @@ function ListeMedic() {
                                     <div>Prix: {value.prixMed}Ar</div>
                                 </div>
                                 <span className="badge">
-                                    <button className="btn btn-outline-danger"><i className="bi bi-ticket-detailed-fill"></i>Détails</button>
+                                    <button onClick={detailMed} className="btn btn-outline-danger" id={value.idMed}><i className="bi bi-ticket-detailed-fill"></i>Détails</button>
                                 </span>
                             </li>
                         )

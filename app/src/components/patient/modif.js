@@ -8,7 +8,6 @@ function ModifPatient() {
     const [age, setAge] = useState('');
     const [sexe, setSexe] = useState('');
     const onChangeName = (e) => {
-        
         setName(e.target.value)
     }
     useEffect(() => {
