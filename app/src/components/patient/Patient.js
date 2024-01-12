@@ -7,9 +7,12 @@ import SearchPatient from "./search";
 function Patient() {
     const [search, setSearch] = useState('');
     const [data, setData] = useState([]);
+    const [isSearch, setIsSearch] = useState(false)
     const onChangeSearch = (e)=>{
-
         setSearch(e.target.value);
+        if(e.target.value == ''){
+            setIsSearch(false)
+        }
     }
     const onSubmitSearch = (e)=>{
         e.preventDefault();
@@ -17,6 +20,7 @@ function Patient() {
         ipcRenderer.on('searchDataResponse', (event, results) => {
             setData(results)            
         });
+        setIsSearch(true);
     }
     return (<>
         <p className="text-center">Patient</p>
@@ -46,7 +50,7 @@ function Patient() {
         </nav>
         <div className="container-fluid">
             {
-                search == '' ? <ListePatient /> : <SearchPatient data={data} />
+                !isSearch ? <ListePatient /> : <SearchPatient data={data} />
             }
             
         </div>
