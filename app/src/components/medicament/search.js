@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function SearchPatient(props){
+function SearchMedic(props){
     const navigate = useNavigate();
     const onClickDetail = (e)=>{
         localStorage.removeItem('idPtn');
@@ -17,10 +17,12 @@ function SearchPatient(props){
                         return (
                             <li className="list-group-item d-flex justify-content-between align-items-start">
                                 <div className="ms-2 me-auto">
-                                    <div className="fw-bold">{value.namePtn}</div>
+                                    <div className="fw-bold">{value.nomMed}</div>
+                                    <div>Quantité: {value.qtMed}</div>
+                                    <div>Prix: {value.prixMed}Ar</div>
                                 </div>
                                 <span className="badge">
-                                    <button className="btn btn-outline-danger" id={value.idPtn} onClick={onClickDetail}><i className="bi bi-ticket-detailed-fill"></i>Détails</button>
+                                    <button className="btn btn-outline-danger"><i className="bi bi-ticket-detailed-fill"></i>Détails</button>
                                 </span>
                             </li>
                         )
@@ -32,4 +34,4 @@ function SearchPatient(props){
     )
 }
 
-export default SearchPatient;
+export default SearchMedic;
