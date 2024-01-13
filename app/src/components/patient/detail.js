@@ -8,7 +8,7 @@ function DetailPatient() {
     const [dataPatient, setDataPatient] = useState([]);
     const [onSuppr, setOnSuppr] = useState(false)
     useEffect(() => {
-        ipcRenderer.send('select-data', `SELECT * FROM Patients WHERE idPtn = ${localStorage.getItem('idPtn')}`);
+        ipcRenderer.send('select-data', `SELECT * FROM Patients WHERE idPtn = ${localStorage.getItem('idPtn') && localStorage.getItem('idPtn')}`);
         ipcRenderer.on('select-data-reply', (event, response) => {
             setDataPatient(response)
         }, []);
@@ -16,7 +16,6 @@ function DetailPatient() {
     const onDelete = (e) => {
         e.preventDefault();
         ipcRenderer.send('delete-patient', { value1: localStorage.getItem('idPtn') && localStorage.getItem('idPtn') });
-        
         navigate('/patient');
     }
     return (

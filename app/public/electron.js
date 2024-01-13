@@ -74,8 +74,13 @@ function createWindow() {
       modifPat.run(data.value1, data.value2, data.value3, data.value4);
     });
 
-    ipcMain.on('modif-patient', async (event, data) => {
+    ipcMain.on('delete-patient', async (event, data) => {
       const delPat = db.prepare(`DELETE FROM Patients WHERE idPtn = ?`);
+      delPat.run(data.value1);
+    });
+
+    ipcMain.on('delete-medicament', async (event, data) => {
+      const delPat = db.prepare(`DELETE FROM Medicaments WHERE idMed = ?`);
       delPat.run(data.value1);
     });
 

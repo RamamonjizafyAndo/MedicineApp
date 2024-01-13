@@ -7,11 +7,15 @@ function DetailMed() {
     const [dataMed, setDataPatient] = useState([]);
     const [onSuppr, setOnSuppr] = useState(false)
     useEffect(() => {
-        ipcRenderer.send('select-data', `SELECT * FROM Medicaments WHERE idMed = ${localStorage.getItem('idMed')}`);
+        ipcRenderer.send('select-data', `SELECT * FROM Medicaments WHERE idMed = ${localStorage.getItem('idMed') && localStorage.getItem('idMed')}`);
         ipcRenderer.on('select-data-reply', (event, response) => {
             setDataPatient(response)
         }, []);
     }, []);
+    const onDelete = (e)=>{
+        ipcRenderer.send('delete-medicament', {value1: localStorage.getItem('idMed') && localStorage.getItem('idMed')});
+        navigate('/medic');
+    }
     return (
         <>
             <p className="text-center">
@@ -38,7 +42,7 @@ function DetailMed() {
                                                 <div>
                                                     Êtes vous vouloir sûre de supprimer?
                                                     <p>
-                                                        <button className="p-2 g-col-6 btn btn-outline-danger" >Oui</button>{' '}
+                                                        <button className="p-2 g-col-6 btn btn-outline-danger" onClick={onDelete}>Oui</button>{' '}
                                                         <button className="p-2 g-col-6 btn btn-outline-success" onClick={(e) => { e.preventDefault(); setOnSuppr(false) }}>Non</button>
                                                     </p>
                                                 </div>

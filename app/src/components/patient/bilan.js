@@ -4,7 +4,7 @@ import { ipcRenderer } from "electron";
 function BilanPatient() {
     const [data, setData] = useState([]);
     useEffect(() => {
-        ipcRenderer.send('select-data', `SELECT * FROM BilanPatients WHERE idPtn = ${localStorage.getItem('idPtn')}`);
+        ipcRenderer.send('select-data', `SELECT * FROM BilanPatients WHERE idPtn = ${localStorage.getItem('idPtn') && localStorage.getItem('idPtn')}`);
         ipcRenderer.on('select-data-reply', (event, response) => {
             setData(response)
         }, []);

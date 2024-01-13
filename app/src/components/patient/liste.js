@@ -12,7 +12,7 @@ function ListePatient() {
     }, []);
     const onClickDetail = (e)=>{
         localStorage.removeItem('idPtn');
-        localStorage.setItem('idPtn',e.target.id);
+        localStorage.setItem('idPtn', e.target.id);
         navigate('/patient/detail');
     }
     return (
