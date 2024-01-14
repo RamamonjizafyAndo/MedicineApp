@@ -5,7 +5,7 @@ import ListeFact from "./liste";
 function Fact() {
     return (
         <>
-            <p className="text-center">Les Ordonnances</p>
+            <p className="text-center title">Les Ordonnances</p>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
                     <div className="navbar-brand">

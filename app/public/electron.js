@@ -12,8 +12,8 @@ let mainWindow;
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     webPreferences: { nodeIntegration: true, contextIsolation: false },
   });
   // and load the index.html of the app.
@@ -88,19 +88,31 @@ function createWindow() {
       const insertMed = db.prepare(`INSERT INTO Medicaments (nomMed, qtMed, prixMed) VALUES (?, ?, ?)`);
       insertMed.run(data.value1, data.value2, data.value3);
     });
+
+    ipcMain.on('select-data', (event, query, params) => {
+      try {
+          const select = db.prepare(query);
+          let rows;
+          console.log(params);
+          if(params){
+            rows = select.all(params);
+          }else{
+            rows = select.all();
+          }
+           // Utilisez les paramètres ici
+          event.reply('select-data-reply', rows);
+      } catch (error) {
+          console.error('Erreur lors de l\'exécution de la requête :', error);
+          event.reply('select-data-reply', { error: error.message });
+      }
+  });
   
-    ipcMain.on('select-data', (event, query) => {
-      const select = db.prepare(query);
-      const rows = select.all();
-      event.reply('select-data-reply', rows);
-      console.log(rows);
-    });
 
     function searchData(table, data) {
       // Construct the base query
       let query = `SELECT * FROM ${table}`;
       const conditions = [];
-    
+
       // Append conditions based on function arguments
       data.forEach(value => {
         if (typeof value.value === "number") {
@@ -111,29 +123,29 @@ function createWindow() {
           conditions.push(`${value.column} = ${value.value}`);
         }
       });
-    
+
       // Add WHERE clause if there are conditions
       if (conditions.length > 0) {
         query += ' WHERE ' + conditions.join(' OR ');
       }
-    
+
       // Execute the query
       const stmt = db.prepare(query);
       return stmt.all();
     }
-    
+
 
     ipcMain.on('searchData', async (event, table, data) => {
       try {
-          const results = searchData(table, data);
-          event.reply('searchDataResponse', results);
-          console.log(results);
+        const results = searchData(table, data);
+        event.reply('searchDataResponse', results);
+        console.log(results);
       } catch (error) {
-          console.error('Error in searchData:', error);
-          event.reply('searchDataResponse', []);
+        console.error('Error in searchData:', error);
+        event.reply('searchDataResponse', []);
       }
-  });
-  
+    });
+
     app.on('will-quit', () => {
       db.close((err) => {
         if (err) {
@@ -145,7 +157,7 @@ function createWindow() {
   } catch (err) {
     console.log(err);
   }
-  
+
 }
 
 // This method will be called when Electron has finished

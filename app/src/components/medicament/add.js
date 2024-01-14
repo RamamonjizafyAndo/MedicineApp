@@ -23,26 +23,26 @@ function AddMedic(){
     }
     return(
     <>
-    <p className="text-center">
+    <p className="text-center title">
                 Ajout patient
             </p>
             <div className="container-fluid" >
-                <div className="card">
+                <div className="card card-add">
                     <div className="card-body">
                         <form onSubmit={onSubmit}>
-                            <div class="mb-3">
-                                <label for="nomMed" class="form-label">Désignation</label>
-                                <input type="text" value={nom} onChange={onChangeLabel} class="form-control" id="nomMed" aria-describedby="nomMed" />
+                            <div className="mb-3">
+                                <label for="nomMed" className="form-label">Désignation</label>
+                                <input type="text" value={nom} onChange={onChangeLabel} className="form-control" id="nomMed" aria-describedby="nomMed" />
                             </div>
-                            <div class="mb-3">
-                                <label for="qt" class="form-label">Quantité</label>
-                                <input type="number" value={qt} onChange={onChangeQt} class="form-control" id="qt " />
+                            <div className="mb-3">
+                                <label for="qt" className="form-label">Quantité</label>
+                                <input type="number" value={qt} onChange={onChangeQt} className="form-control" id="qt " />
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label" for='prix'>Prix</label>
-                                <input type="number" value={prix} onChange={onChangePrix} class="form-control" id="prix " />
+                            <div className="mb-3">
+                                <label className="form-label" for='prix'>Prix</label>
+                                <input type="number" value={prix} onChange={onChangePrix} className="form-control" id="prix " />
                             </div>
-                            <button type="submit" class="btn btn-primary"><i className="bi bi-database-fill-add"></i>{' '}Ajouter</button>
+                            <button type="submit" className="btn btn-primary"><i className="bi bi-database-fill-add"></i>{' '}Ajouter</button>
                         </form>
                     </div>
                 </div>

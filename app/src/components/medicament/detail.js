@@ -7,25 +7,36 @@ function DetailMed() {
     const [dataMed, setDataPatient] = useState([]);
     const [onSuppr, setOnSuppr] = useState(false)
     useEffect(() => {
-        ipcRenderer.send('select-data', `SELECT * FROM Medicaments WHERE idMed = ${localStorage.getItem('idMed') && localStorage.getItem('idMed')}`);
-        ipcRenderer.on('select-data-reply', (event, response) => {
-            setDataPatient(response)
-        }, []);
-    }, []);
+        const idMed = localStorage.getItem('idMed');
+        if (idMed) {
+            ipcRenderer.send('select-data', 'SELECT * FROM Medicaments WHERE idMed = ?', [idMed]);
+        }
+    
+        const handleSelectDataReply = (event, response) => {
+            setDataPatient(response);
+        };
+    
+        ipcRenderer.on('select-data-reply', handleSelectDataReply);
+    
+        // Nettoyage de l'effet
+        return () => {
+            ipcRenderer.removeListener('select-data-reply', handleSelectDataReply);
+        };
+    }, [localStorage.getItem('idMed')]);
     const onDelete = (e)=>{
         ipcRenderer.send('delete-medicament', {value1: localStorage.getItem('idMed') && localStorage.getItem('idMed')});
         navigate('/medic');
     }
     return (
         <>
-            <p className="text-center">
+            <p className="text-center title">
                 Détail du médicament
             </p>
             {
                 dataMed && dataMed.map((value) => {
                     return (
                         <div className="container-fluid">
-                            <div className="card">
+                            <div className="card card-detail">
                                 <div className="card-body">
                                     <p className="card-text">Nom: {value.nomMed}</p>
                                     <p className="card-text">Prix: {value.prixMed}</p>

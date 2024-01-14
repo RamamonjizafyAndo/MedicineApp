@@ -36,3 +36,32 @@
     transform: rotate(360deg);
   }
 }
+
+.card-add{
+  width: 75%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.card-detail{
+  width: 60%;
+  text-align: center;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.title{
+  font-size:x-large;
+  font-style: italic;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #4e73df;
+}
+
+.form-label{
+  font-size: medium;
+  font-weight: bold;
+}
+
+.card-detail button{
+  width: 150px;
+}

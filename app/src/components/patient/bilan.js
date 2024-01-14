@@ -4,11 +4,22 @@ import { ipcRenderer } from "electron";
 function BilanPatient() {
     const [data, setData] = useState([]);
     useEffect(() => {
-        ipcRenderer.send('select-data', `SELECT * FROM BilanPatients WHERE idPtn = ${localStorage.getItem('idPtn') && localStorage.getItem('idPtn')}`);
-        ipcRenderer.on('select-data-reply', (event, response) => {
-            setData(response)
-        }, []);
-    }, [])
+        const idPtn = localStorage.getItem('idPtn');
+        if (idPtn) {
+            ipcRenderer.send('select-data', 'SELECT * FROM BilanPatients WHERE idPtn = ?', [idPtn]);
+        }
+    
+        const handleSelectDataReply = (event, response) => {
+            setData(response);
+        };
+    
+        ipcRenderer.on('select-data-reply', handleSelectDataReply);
+    
+        // Nettoyage de l'effet
+        return () => {
+            ipcRenderer.removeListener('select-data-reply', handleSelectDataReply);
+        };
+    }, [localStorage.getItem('idPtn')]);
     return (
         <>
             <p className="text-center">

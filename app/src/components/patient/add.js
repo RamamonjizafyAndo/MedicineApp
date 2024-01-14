@@ -23,11 +23,11 @@ function AddPatient() {
     }
     return (
         <>
-            <p className="text-center">
+            <p className="text-center title">
                 Ajout patient
             </p>
             <div className="container-fluid" >
-                <div className="card">
+                <div className="card card-add">
                     <div className="card-body">
                         <form onSubmit={onSubmit}>
                             <div class="mb-3">
@@ -38,7 +38,7 @@ function AddPatient() {
                                 <label for="agePatient" class="form-label">Age</label>
                                 <input type="number" onChange={onChangeAge} value={age} class="form-control" id="agePatient " />
                             </div>
-                            <div class="mb-3 form-check">
+                            <div class="mb-3">
                                 <label class="form-label">Sexe</label>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="sexe" value="Homme" checked={sexe === "Homme"} onChange={onChangeSexe} id="flexRadioDefault1" />

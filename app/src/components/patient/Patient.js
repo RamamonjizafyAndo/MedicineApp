@@ -23,7 +23,7 @@ function Patient() {
         setIsSearch(true);
     }
     return (<>
-        <p className="text-center">Patient</p>
+        <p className="text-center title">Patient</p>
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
                 <div className="navbar-brand">
@@ -50,7 +50,7 @@ function Patient() {
         </nav>
         <div className="container-fluid">
             {
-                !isSearch ? <ListePatient /> : <SearchPatient data={data} />
+                !isSearch ? <ListePatient /> : <SearchPatient data={data} idOrd = {false} />
             }
             
         </div>

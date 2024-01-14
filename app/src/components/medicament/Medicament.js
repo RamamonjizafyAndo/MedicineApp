@@ -23,7 +23,7 @@ function Medic() {
         setIsSearch(true);
     }
     return (<>
-        <p className="text-center">Medicament</p>
+        <p className="text-center title">Medicament</p>
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
                 <div className="navbar-brand">

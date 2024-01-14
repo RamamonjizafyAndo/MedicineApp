@@ -5,11 +5,23 @@ function ListePatient() {
     const [data, setData] = useState([]);
     const navigate = useNavigate();
     useEffect(() => {
+        // Envoyer la requête pour sélectionner les données
         ipcRenderer.send('select-data', 'SELECT * FROM Patients');
-        ipcRenderer.on('select-data-reply', (event, response) => {
-            setData(response)
-        }, [])
-    }, []);
+    
+        // Fonction pour gérer la réponse
+        const handleSelectDataReply = (event, response) => {
+            setData(response);
+        };
+    
+        // Ajouter l'écouteur d'événements pour la réponse
+        ipcRenderer.on('select-data-reply', handleSelectDataReply);
+    
+        // Nettoyage : Supprimer l'écouteur d'événements lors du démontage du composant
+        return () => {
+            ipcRenderer.removeListener('select-data-reply', handleSelectDataReply);
+        };
+    }, []); // Le tableau de dépendances vide signifie que cet effet s'exécutera une fois après le premier rendu
+    
     const onClickDetail = (e)=>{
         localStorage.removeItem('idPtn');
         localStorage.setItem('idPtn', e.target.id);

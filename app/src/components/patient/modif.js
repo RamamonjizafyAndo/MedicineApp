@@ -31,7 +31,7 @@ function ModifPatient() {
     }
     return (
         <>
-            <p className="text-center">
+            <p className="text-center title">
                 Modification patient
             </p>
             <div className="container-fluid" >

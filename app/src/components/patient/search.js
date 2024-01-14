@@ -8,8 +8,12 @@ function SearchPatient(props){
         localStorage.setItem('idPtn',e.target.id);
         navigate('/patient/detail');
     }
+    const addPtnOrdonnance = (e)=>{
+        localStorage.removeItem('idPtnOrd');
+        localStorage.setItem('idPtnOrd',e.target.id)
+        console.log(localStorage.getItem('idPtnOrd'));
+    }
     return(
-        <>
         <>
             <div className="card" >
                 <ol class="list-group list-group-numbered">
@@ -27,7 +31,6 @@ function SearchPatient(props){
                     })}
                 </ol>
             </div>
-        </>
         </>
     )
 }
