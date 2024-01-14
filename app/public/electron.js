@@ -32,9 +32,16 @@ function createWindow() {
     const createBilanTable = db.prepare(`CREATE TABLE IF NOT EXISTS BilanPatients(
       idBln INTEGER PRIMARY KEY AUTOINCREMENT,
       maladie TEXT NOT NULL,
+      temperature NUMBER NOT NULL,
+      poids NUMBER NOT NULL,
+      tension TEXT NOT NULL,
+      oxygene TEXT NOT NULL,
       idPtn INTEGER NOT NULL,
+      idOrd INTEGER NOT NULL,
+      FOREIGN KEY (idOrd) REFERENCES Ordonnances (idOrd) ON DELETE SET NULL ON UPDATE CASCADE,
       FOREIGN KEY (idPtn) REFERENCES Patients (idPtn) ON DELETE SET NULL ON UPDATE CASCADE 
     )`);
+
     createBilanTable.run();
 
     const createMedicTable = db.prepare(`CREATE TABLE IF NOT EXISTS Medicaments(
@@ -59,6 +66,7 @@ function createWindow() {
   idArt INTEGER PRIMARY KEY AUTOINCREMENT,
   idOrd INTEGER NOT NULL,
   idMed INTEGER NOT NULL,
+  qtMed INTEGER NOT NULL,
   FOREIGN KEY (idOrd) REFERENCES Ordonnances(idOrd) ON DELETE SET NULL ON UPDATE CASCADE,
   FOREIGN KEY (idMed) REFERENCES Medicaments(idMed) ON DELETE SET NULL ON UPDATE CASCADE 
 )`);

@@ -35,7 +35,7 @@ function DetailMed() {
             {
                 dataMed && dataMed.map((value) => {
                     return (
-                        <div className="container-fluid">
+                        <div className="container-fluid" key={value.idMed}>
                             <div className="card card-detail">
                                 <div className="card-body">
                                     <p className="card-text">Nom: {value.nomMed}</p>

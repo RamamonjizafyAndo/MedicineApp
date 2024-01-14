@@ -38,7 +38,7 @@ function DetailPatient() {
             {
                 dataPatient && dataPatient.map((value) => {
                     return (
-                        <div className="container-fluid">
+                        <div className="container-fluid" key={value.idPtn}>
                             <div className="card card-detail">
                                 <div className="card-body">
                                     <p className="card-text">Nom: {value.namePtn}</p>
