@@ -25,6 +25,10 @@ function CreateFact() {
     const [selectedPtn, setSelectedPtn] = useState(null);
     const [currentSearchType, setCurrentSearchType] = useState(null);
     const [currentAddType, setCurrentAddType] = useState(null);
+    const [formatPapier, setFormatPapier] = useState("");
+    const onChangeFormat = (e)=>{
+        setFormatPapier(e.target.value);
+    }
     const onChangeTemp = (e) => {
         if (e.target.value <= 0 || selectedPtn == null || bilan == '' || poids <= 0 || tension == "" || oxygene == "") {
             setValidatedAddPtn(false)
@@ -128,7 +132,7 @@ function CreateFact() {
                         idMed: response[0].idMed,
                         nomMed: response[0].nomMed,
                         qtMed: quantite,
-                        mode : mode,
+                        mode: mode,
                         prixMed: quantite * response[0].prixMed
                     }
                 ]
@@ -363,7 +367,7 @@ function CreateFact() {
                                             <label for="bilan" className="form-label">
                                                 Mode d'utilisation
                                             </label>
-                                            <input type="text" id="bilan" className="form-control" value={mode} onChange={onCHangeMode} />
+                                            <textarea rows={3} type="text" id="bilan" className="form-control" value={mode} onChange={onCHangeMode} />
                                         </div>
                                         <button className="btn btn-primary" disabled={!validatedMed} type="onSubmit">Ajouter</button>
                                     </form>
@@ -377,7 +381,12 @@ function CreateFact() {
                                                 <div className="ms-2 me-auto">
                                                     <div className="fw-bold">{value.nomMed}</div>
                                                     <div>Quantité: {value.qtMed} ({value.prixMed}Ar)</div>
-                                                    <div>Mode d'utilisation: {value.mode}</div>
+                                                    <div>Mode d'utilisation: {value.mode.split('\n').map((ligne, index) => (
+                                                        <React.Fragment key={index}>
+                                                            {ligne}
+                                                            <br />
+                                                        </React.Fragment>
+                                                    ))}</div>
                                                 </div>
                                                 <span className="badge">
                                                     <button className="btn btn-outline-danger" id={value.idMed} onClick={filterMed}><i className="bi bi-x"></i></button>
@@ -389,7 +398,39 @@ function CreateFact() {
                             </div>
                         </div>
                     </div>
-                    
+
+                </div>
+                <br />
+                <div className="row0">
+                    <div className="card card-detail">
+                        <div className="card-body">
+                            <div className="card-title">Propriété</div>
+                            <div className="card-text">
+                                Date du jour : {new Date().getDate()}-{new Date().getMonth() + 1}-{new Date().getFullYear()}
+                            </div>
+                            <div className="card-text">
+                            <div class="mb-3">
+                                <label class="form-label">Format</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="format" value="A5" checked={formatPapier === "A5"} onChange={onChangeFormat} id="flexRadioDefault1" />
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        A5
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="format" value="rouleau" checked={formatPapier === "rouleau"} onChange={onChangeFormat} id="flexRadioDefault2" />
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Papier rouleau
+                                    </label>
+                                </div>
+                            </div>
+                            </div>
+                            <div className="card-text display-flex">
+                                <button className="btn btn-outline-success">Terminer</button>{' '}
+                                <button className="btn btn-outline-danger">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
