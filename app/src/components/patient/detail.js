@@ -27,7 +27,7 @@ function DetailPatient() {
     
     const onDelete = (e) => {
         e.preventDefault();
-        ipcRenderer.send('delete-patient', { value1: localStorage.getItem('idPtn') && localStorage.getItem('idPtn') });
+        ipcRenderer.send('delete-patient', { value1: idUser});
         navigate('/patient');
     }
     return (

@@ -1,30 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../hooks/contextPatient";
 
 function DetailMed() {
+    const { idMedicament } = useContext(UserContext);
     const navigate = useNavigate();
-    const [dataMed, setDataPatient] = useState([]);
+    const [dataMed, setDataMed] = useState([]);
     const [onSuppr, setOnSuppr] = useState(false)
     useEffect(() => {
-        const idMed = localStorage.getItem('idMed');
-        if (idMed) {
-            ipcRenderer.send('select-data', 'SELECT * FROM Medicaments WHERE idMed = ?', [idMed]);
+        if (idMedicament && dataMed.length == 0) {
+            ipcRenderer.send('select-data', 'SELECT * FROM Medicaments WHERE idMed = ?', [idMedicament]);
         }
-    
+
         const handleSelectDataReply = (event, response) => {
-            setDataPatient(response);
+            setDataMed(response);
         };
-    
+
         ipcRenderer.on('select-data-reply', handleSelectDataReply);
-    
+
         // Nettoyage de l'effet
         return () => {
             ipcRenderer.removeListener('select-data-reply', handleSelectDataReply);
         };
-    }, [localStorage.getItem('idMed')]);
-    const onDelete = (e)=>{
-        ipcRenderer.send('delete-medicament', {value1: localStorage.getItem('idMed') && localStorage.getItem('idMed')});
+    }, [idMedicament, dataMed]);
+    const onDelete = (e) => {
+        ipcRenderer.send('delete-medicament', { value1: idMedicament });
         navigate('/medic');
     }
     return (
@@ -33,7 +34,7 @@ function DetailMed() {
                 Détail du médicament
             </p>
             {
-                dataMed && dataMed.map((value) => {
+                dataMed ? dataMed.map((value) => {
                     return (
                         <div className="container-fluid" key={value.idMed}>
                             <div className="card card-detail">
@@ -45,7 +46,7 @@ function DetailMed() {
                                         <button className="p-2 g-col-6 btn btn-outline-success">Ordonnance</button>
                                     </p>
                                     <p>
-                                        <button className="p-2 g-col-6 btn btn-outline-primary" onClick={(e)=>{navigate('/patient/modif')}}>Modifier</button>
+                                        <button className="p-2 g-col-6 btn btn-outline-primary" onClick={(e) => { navigate('/medic/modif') }}>Modifier</button>
                                     </p>
                                     <p>
                                         {
@@ -64,7 +65,10 @@ function DetailMed() {
                             </div>
                         </div>
                     )
-                })
+                }) :
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
             }
         </>
     )

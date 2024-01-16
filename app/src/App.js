@@ -11,6 +11,7 @@ import DetailPatient from './components/patient/detail';
 import CreateFact from './components/ordonnance/add';
 import ModifPatient from './components/patient/modif';
 import DetailMed from './components/medicament/detail';
+import ModifMedic from './components/medicament/modif';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path='/medic' element={<Medic />} />
         <Route path='/medic/addMedic' element={<AddMedic />} />
         <Route path='/medic/detail' element={<DetailMed />} />
+        <Route path='/medic/modif' element={<ModifMedic />} />
         <Route path='/fact' element={<Fact />} />
         <Route path='/fact/create' element={<CreateFact />} />
       </Routes>

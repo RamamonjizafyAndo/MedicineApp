@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {useNavigate} from 'react-router-dom'
+import { UserContext } from "../../hooks/contextPatient";
 const { ipcRenderer } = require('electron');
 
 function ModifPatient() {
+    const {idUser} = useContext(UserContext);
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
@@ -11,13 +13,14 @@ function ModifPatient() {
         setName(e.target.value)
     }
     useEffect(() => {
-        ipcRenderer.send('select-data', `SELECT * FROM Patients WHERE idPtn = ${localStorage.getItem('idPtn')}`);
+        console.log(idUser);
+        ipcRenderer.send('select-data', `SELECT * FROM Patients WHERE idPtn = ${idUser}`);
         ipcRenderer.on('select-data-reply', (event, response) => {
             setName(response[0].namePtn);
             setAge(response[0].agePtn);
             setSexe(response[0].sexePtn);
         }, []);
-    }, []);
+    }, [idUser]);
     const onChangeAge = (e) => {
         setAge(e.target.value)
     }
@@ -26,7 +29,7 @@ function ModifPatient() {
     }
     const onSubmit = (e)=>{
         e.preventDefault();
-        ipcRenderer.send('modif-patient', { value1: name, value2: age, value3: sexe, value4: localStorage.getItem('idPtn') && localStorage.getItem('idPtn') });
+        ipcRenderer.send('modif-patient', { value1: name, value2: age, value3: sexe, value4: idUser });
         navigate('/patient/detail')
     }
     return (
