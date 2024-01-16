@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../hooks/contextPatient";
 function ListePatient() {
+    const {changeIdUser} = useContext(UserContext);
     const [data, setData] = useState([]);
     const navigate = useNavigate();
     useEffect(() => {
@@ -23,8 +25,7 @@ function ListePatient() {
     }, []); // Le tableau de dépendances vide signifie que cet effet s'exécutera une fois après le premier rendu
     
     const onClickDetail = (e)=>{
-        localStorage.removeItem('idPtn');
-        localStorage.setItem('idPtn', e.target.id);
+        changeIdUser(e.target.id);
         navigate('/patient/detail');
     }
     return (

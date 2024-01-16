@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import SearchPatient from "../patient/search";
 import { ipcRenderer } from "electron";
+import ReactPDF from '@react-pdf/renderer';
+import CreatePdf from "./createPdf";
+import { useNavigate } from "react-router-dom";
 
 function CreateFact() {
+    const navigate = useNavigate();
     const [patient, setPatient] = useState(null);
     const [idPtn, setIdPtn] = useState('');
+    const [validQtMed, setValidQtMed] = useState(true);
     const [searchMedicament, setSearchMedicament] = useState('');
     const [isSearchMedicament, setIsSearchMedicament] = useState(false)
     const [searchPatient, setSearchPatient] = useState('');
@@ -26,7 +31,7 @@ function CreateFact() {
     const [currentSearchType, setCurrentSearchType] = useState(null);
     const [currentAddType, setCurrentAddType] = useState(null);
     const [formatPapier, setFormatPapier] = useState("");
-    const onChangeFormat = (e)=>{
+    const onChangeFormat = (e) => {
         setFormatPapier(e.target.value);
     }
     const onChangeTemp = (e) => {
@@ -62,12 +67,17 @@ function CreateFact() {
         setOxygene(e.target.value);
     }
     const onChangeQuantite = (e) => {
-        if (e.target.value <= 0 || !e.target.value || mode === '' || selectedMed === null) {
+
+        if (e.target.value <= 0 || !e.target.value || mode === '' || selectedMed === null || !validQtMed) {
             setValidatedMed(false)
         } else {
             setValidatedMed(true)
         }
         setQuantite(e.target.value);
+        ipcRenderer.send('select-data', "SELECT CASE WHEN qtMed >= ? THEN 'true' ELSE 'false' END AS qtStatus FROM Medicaments WHERE idMed = ?", [parseInt(e.target.value), selectedMed]);
+        setCurrentAddType('checkQtMed');
+        console.log(quantite);
+
     }
     const onCHangeMode = (e) => {
         if (e.target.value === '' || quantite <= 0 || !quantite || selectedMed === null) {
@@ -127,6 +137,7 @@ function CreateFact() {
                 }
                 setPatient(patientListener);
             } else if (currentAddType === 'medicament') {
+                console.log(quantite);
                 const medicamentListener = [
                     {
                         idMed: response[0].idMed,
@@ -137,6 +148,16 @@ function CreateFact() {
                     }
                 ]
                 setMedicament(prevMedicament => [...prevMedicament, ...medicamentListener]);
+                setValidatedMed(true);
+                setValidQtMed(true);
+            } else if (currentAddType === 'checkQtMed') {
+                if (response[0].qtStatus === 'false') {
+                    setValidatedMed(false);
+                    setValidQtMed(false);
+                } else {
+                    setValidQtMed(true);
+                    setValidatedMed(true);
+                }
             }
         };
 
@@ -148,7 +169,7 @@ function CreateFact() {
             ipcRenderer.removeListener('searchDataResponse', searchDataResponseListener);
             ipcRenderer.removeListener('select-data-reply', addDataResponseListener);
         };
-    }, [currentSearchType, currentAddType]);
+    }, [currentSearchType, currentAddType, quantite]);
     const onChangeSearchMedicament = (e) => {
 
         if (e.target.value == '') {
@@ -189,14 +210,14 @@ function CreateFact() {
         setCurrentAddType('patient');
     }
 
-    const addMednOrdonnance = (e) => {
+    const addMednOrdonnance = async (e) => {
         e.preventDefault();
         setIdPtn(selectedMed);
-        ipcRenderer.send('select-data', 'SELECT * FROM Medicaments WHERE idMed = ?', [selectedMed]);
+        await ipcRenderer.send('select-data', 'SELECT * FROM Medicaments WHERE idMed = ?', [selectedMed]);
+        setCurrentAddType('medicament');
         setIsSearchMedicament(false);
         setValidatedMed(false);
         setSearchMedicament('');
-        setCurrentAddType('medicament');
     }
 
     const filterMed = (e) => {
@@ -210,6 +231,35 @@ function CreateFact() {
         setIsSearchPatient(false);
         setSearchPatient('');
         setValidatedAddPtn(false);
+    }
+    let prixTotal = 0
+    const onSubmitFinal = (e) => {
+        e.preventDefault();
+        ReactPDF.render(<CreatePdf dose={mode} />, `./example.pdf`);
+        medicament.map((value) => {
+            ipcRenderer.send('buy-medicament', { value1: value.qtMed, value2: value.idMed })
+            console.log(value.prixMed);
+            prixTotal = prixTotal + value.prixMed;
+            console.log(prixTotal);
+        });
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Les mois sont indexés à partir de 0
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const formattedDate = `${day}-${month}-${year}`;
+        const ref = `${patient.namePtn}-${formattedDate}`
+        ipcRenderer.send('insert-ordonnance', {
+            value1: patient.maladie,
+            value2: patient.temperature,
+            value3: patient.poids,
+            value4: patient.tension,
+            value5: patient.oxygene,
+            value6: prixTotal,
+            value7: formattedDate,
+            value8: patient.idPtn,
+            value9: ref
+        });
+        navigate('/fact')
     }
     return (
         <>
@@ -361,7 +411,14 @@ function CreateFact() {
                                             <label for="bilan" className="form-label">
                                                 Quantité
                                             </label>
-                                            <input type="number" id="bilan" className="form-control" value={quantite} onChange={onChangeQuantite} />
+                                            <input type="number" style={{ color: !validQtMed ? 'red' : 'black' }} id="bilan" className="form-control" value={quantite} onChange={onChangeQuantite} />
+                                            {
+                                                !validQtMed &&
+                                                <div style={{ color: 'red' }}>
+                                                    Entrer moins de quantité
+                                                </div>
+                                            }
+
                                         </div>
                                         <div className="mb-3">
                                             <label for="bilan" className="form-label">
@@ -409,24 +466,24 @@ function CreateFact() {
                                 Date du jour : {new Date().getDate()}-{new Date().getMonth() + 1}-{new Date().getFullYear()}
                             </div>
                             <div className="card-text">
-                            <div class="mb-3">
-                                <label class="form-label">Format</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="format" value="A5" checked={formatPapier === "A5"} onChange={onChangeFormat} id="flexRadioDefault1" />
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                        A5
-                                    </label>
+                                <div class="mb-3">
+                                    <label class="form-label">Format</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="format" value="A5" checked={formatPapier === "A5"} onChange={onChangeFormat} id="flexRadioDefault1" />
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            A5
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="format" value="rouleau" checked={formatPapier === "rouleau"} onChange={onChangeFormat} id="flexRadioDefault2" />
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Papier rouleau
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="format" value="rouleau" checked={formatPapier === "rouleau"} onChange={onChangeFormat} id="flexRadioDefault2" />
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        Papier rouleau
-                                    </label>
-                                </div>
-                            </div>
                             </div>
                             <div className="card-text display-flex">
-                                <button className="btn btn-outline-success">Terminer</button>{' '}
+                                <button className="btn btn-outline-success" onClick={onSubmitFinal}>Terminer</button>{' '}
                                 <button className="btn btn-outline-danger">Annuler</button>
                             </div>
                         </div>

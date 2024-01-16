@@ -29,21 +29,6 @@ function createWindow() {
     )`);
     createPatientsTable.run();
 
-    const createBilanTable = db.prepare(`CREATE TABLE IF NOT EXISTS BilanPatients(
-      idBln INTEGER PRIMARY KEY AUTOINCREMENT,
-      maladie TEXT NOT NULL,
-      temperature NUMBER NOT NULL,
-      poids NUMBER NOT NULL,
-      tension TEXT NOT NULL,
-      oxygene TEXT NOT NULL,
-      idPtn INTEGER NOT NULL,
-      idOrd INTEGER NOT NULL,
-      FOREIGN KEY (idOrd) REFERENCES Ordonnances (idOrd) ON DELETE SET NULL ON UPDATE CASCADE,
-      FOREIGN KEY (idPtn) REFERENCES Patients (idPtn) ON DELETE SET NULL ON UPDATE CASCADE 
-    )`);
-
-    createBilanTable.run();
-
     const createMedicTable = db.prepare(`CREATE TABLE IF NOT EXISTS Medicaments(
       idMed INTEGER PRIMARY KEY AUTOINCREMENT,
       nomMed TEXT NOT NULL,
@@ -54,23 +39,24 @@ function createWindow() {
 
     const createOrdTable = db.prepare(`CREATE TABLE IF NOT EXISTS Ordonnances(
       idOrd INTEGER PRIMARY KEY AUTOINCREMENT,
+      ref TEXT NOT NULL,
+      maladie TEXT NOT NULL,
+      temperature NUMBER NOT NULL,
+      poids NUMBER NOT NULL,
+      tension TEXT NOT NULL,
+      oxygene TEXT NOT NULL,
       prix INTEGER,
       date DATE,
       idPtn INTEGER NOT NULL,
       FOREIGN KEY (idPtn) REFERENCES Patients(idPtn) ON DELETE SET NULL ON UPDATE CASCADE 
     )`)
     createOrdTable.run();
-
-    //Table of medicament in the Ordonnance
-    const createArtiTable = db.prepare(`CREATE TABLE IF NOT EXISTS Articles(
-  idArt INTEGER PRIMARY KEY AUTOINCREMENT,
-  idOrd INTEGER NOT NULL,
-  idMed INTEGER NOT NULL,
-  qtMed INTEGER NOT NULL,
-  FOREIGN KEY (idOrd) REFERENCES Ordonnances(idOrd) ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (idMed) REFERENCES Medicaments(idMed) ON DELETE SET NULL ON UPDATE CASCADE 
-)`);
-    createArtiTable.run();
+    
+    ipcMain.on('insert-ordonnance', async (event, data)=>{
+      console.log(data);
+      const insertOrd = db.prepare('INSERT INTO Ordonnances (maladie, temperature, poids, tension, oxygene, prix, date, idPtn, ref) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+      insertOrd.run(data.value1, data.value2, data.value3, data.value4, data.value5, data.value6, data.value7, data.value8, data.value9);
+    })
 
     ipcMain.on('insert-patient', async (event, data) => {
       const insertPat = db.prepare(`INSERT INTO Patients (namePtn, agePtn, sexePtn) VALUES (?, ?, ?)`);
@@ -97,6 +83,14 @@ function createWindow() {
       insertMed.run(data.value1, data.value2, data.value3);
     });
 
+    ipcMain.on('buy-medicament', async (event, data) => {
+      console.log(data);
+      const updateMed = db.prepare(`UPDATE Medicaments SET qtMed = qtMed - ? WHERE idMed = ?`);
+      updateMed.run(data.value1, data.value2);
+    });
+
+    
+
     ipcMain.on('select-data', (event, query, params) => {
       try {
           const select = db.prepare(query);
@@ -109,6 +103,7 @@ function createWindow() {
           }
            // Utilisez les paramètres ici
           event.reply('select-data-reply', rows);
+          console.log(rows);
       } catch (error) {
           console.error('Erreur lors de l\'exécution de la requête :', error);
           event.reply('select-data-reply', { error: error.message });

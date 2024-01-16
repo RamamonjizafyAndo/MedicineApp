@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
 import BilanPatient from "./bilan";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../hooks/contextPatient";
 
 function DetailPatient() {
+    const {idUser} = useContext(UserContext)
     const navigate = useNavigate();
     const [dataPatient, setDataPatient] = useState([]);
-    const [onSuppr, setOnSuppr] = useState(false)
+    const [onSuppr, setOnSuppr] = useState(false);
     useEffect(() => {
-        const idPtn = localStorage.getItem('idPtn');
-        if (idPtn) {
-            ipcRenderer.send('select-data', 'SELECT * FROM Patients WHERE idPtn = ?', [idPtn]);
+        if (idUser) {
+            ipcRenderer.send('select-data', 'SELECT * FROM Patients WHERE idPtn = ?', [idUser]);
         }
     
         const handleSelectDataReply = (event, response) => {
+
             setDataPatient(response);
         };
     
         ipcRenderer.on('select-data-reply', handleSelectDataReply);
-    
-        // Nettoyage de l'effet
         return () => {
             ipcRenderer.removeListener('select-data-reply', handleSelectDataReply);
-        };
-    }, [localStorage.getItem('idPtn')]);
+        };        
+    }, [idUser]);
     
     const onDelete = (e) => {
         e.preventDefault();
@@ -69,7 +69,6 @@ function DetailPatient() {
                     )
                 })
             }
-            <BilanPatient />
         </>
     )
 }

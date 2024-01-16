@@ -28,8 +28,8 @@ function ListeFact() {
                         return (
                             <li className="list-group-item d-flex justify-content-between align-items-start">
                                 <div className="ms-2 me-auto">
-                                    <div className="fw-bold">{value.date}</div>
-                                    <div>Prix: {value.prixMed}Ar</div>
+                                    <div className="fw-bold">{value.ref}</div>
+                                    <div>Prix: {value.prix}Ar</div>
                                 </div>
                                 <span className="badge">
                                     <button className="btn btn-outline-danger"><i className="bi bi-ticket-detailed-fill"></i>Voir</button>
