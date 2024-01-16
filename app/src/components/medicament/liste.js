@@ -24,9 +24,12 @@ function ListeMedic() {
         };
     }, []); // Le tableau de dépendances vide signifie que cet effet s'exécutera une fois après le premier rendu
     
-    const detailMed = (e)=>{
-        changeIdMedicament(e.target.id);
-        navigate('/medic/detail');
+    const detailMed = async(e)=>{
+        await changeIdMedicament(e.target.id);
+        setTimeout(()=>{
+            navigate('/medic/detail');
+        },500)
+        
     }
     return (
         <>

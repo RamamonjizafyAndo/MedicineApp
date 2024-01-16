@@ -9,6 +9,8 @@ function DetailMed() {
     const [dataMed, setDataMed] = useState([]);
     const [onSuppr, setOnSuppr] = useState(false)
     useEffect(() => {
+        console.log(idMedicament);
+        console.log(dataMed);
         if (idMedicament && dataMed.length == 0) {
             ipcRenderer.send('select-data', 'SELECT * FROM Medicaments WHERE idMed = ?', [idMedicament]);
         }
