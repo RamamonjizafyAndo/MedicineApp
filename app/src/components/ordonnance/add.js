@@ -277,7 +277,7 @@ function CreateFact() {
                                 </p>
                                 {
                                     isSearchPatient && <div className="card-text">
-                                        <div className="card" >
+                                        <div className="card" style={{maxHeight:'100px',overflowY:'scroll'}}>
                                             <ol className="list-group list-group-numbered">
                                                 {dataPatient && dataPatient.map((value) => {
                                                     return (
@@ -376,7 +376,7 @@ function CreateFact() {
                                 <div className="card-text">
                                     {
                                         isSearchMedicament &&
-                                        <div className="card" >
+                                        <div className="card" style={{maxHeight:'100px',overflowY:'scroll'}}>
                                             <ol className="list-group list-group-numbered">
                                                 {dataMedicament && dataMedicament.map((value) => {
                                                     return (
