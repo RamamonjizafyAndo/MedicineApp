@@ -45,7 +45,7 @@ function AddMedic() {
     return (
         <>
             <p className="text-center title">
-                Ajout patient
+                Ajout médicament
             </p>
             <div className="container-fluid" >
                 <div className="card card-add">

@@ -15,7 +15,6 @@ function DetailPatient() {
         }
     
         const handleSelectDataReply = (event, response) => {
-
             setDataPatient(response);
         };
     
@@ -44,9 +43,6 @@ function DetailPatient() {
                                     <p className="card-text">Nom: {value.namePtn}</p>
                                     <p className="card-text">Age: {value.agePtn}</p>
                                     <p className="card-text">Sexe: {value.sexePtn}</p>
-                                    <p>
-                                        <button className="p-2 g-col-6 btn btn-outline-success">Ordonnance</button>
-                                    </p>
                                     <p>
                                         <button className="p-2 g-col-6 btn btn-outline-primary" onClick={(e)=>{navigate('/patient/modif')}}>Modifier</button>
                                     </p>

@@ -47,8 +47,8 @@ function createWindow() {
       oxygene TEXT NOT NULL,
       prix INTEGER,
       date DATE,
-      idPtn INTEGER NOT NULL,
-      FOREIGN KEY (idPtn) REFERENCES Patients(idPtn) ON DELETE SET NULL ON UPDATE CASCADE 
+      idPtn INTEGER,
+      FOREIGN KEY (idPtn) REFERENCES Patients(idPtn) ON DELETE SET NULL 
     )`)
     createOrdTable.run();
     

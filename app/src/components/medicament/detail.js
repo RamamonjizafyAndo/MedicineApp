@@ -11,7 +11,7 @@ function DetailMed() {
     useEffect(() => {
         console.log(idMedicament);
         console.log(dataMed);
-        if (idMedicament && dataMed.length == 0) {
+        if (idMedicament) {
             ipcRenderer.send('select-data', 'SELECT * FROM Medicaments WHERE idMed = ?', [idMedicament]);
         }
 
@@ -44,9 +44,6 @@ function DetailMed() {
                                     <p className="card-text">Nom: {value.nomMed}</p>
                                     <p className="card-text">Prix: {value.prixMed}</p>
                                     <p className="card-text">Quantité: {value.qtMed}</p>
-                                    <p>
-                                        <button className="p-2 g-col-6 btn btn-outline-success">Ordonnance</button>
-                                    </p>
                                     <p>
                                         <button className="p-2 g-col-6 btn btn-outline-primary" onClick={(e) => { navigate('/medic/modif') }}>Modifier</button>
                                     </p>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import SearchPatient from "../patient/search";
 import { ipcRenderer } from "electron";
 import ReactPDF from '@react-pdf/renderer';
 import CreatePdf from "./createPdf";

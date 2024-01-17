@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {useNavigate} from 'react-router-dom'
 const { ipcRenderer } = require('electron');
 
@@ -7,6 +7,24 @@ function AddPatient() {
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
     const [sexe, setSexe] = useState('');
+    const [validNamePtn , setValidNamePtn] = useState(true);
+    useEffect(()=>{
+        const addPatient = (event, response) =>{
+            if(response.find((value)=>value.patientStatus == 'true')){
+                setValidNamePtn(false)
+            } else{
+                if((name && age && sexe) !== ""){
+                    
+                    ipcRenderer.send('insert-patient', { value1: name, value2: age, value3: sexe });
+                    navigate('/patient')
+                }
+            }
+        }
+        ipcRenderer.on('select-data-reply', addPatient);
+        return ()=>{
+            ipcRenderer.removeListener('select-data-reply', addPatient);
+        }
+    },[name, age, sexe])
     const onChangeName = (e) => {
         setName(e.target.value)
     }
@@ -18,8 +36,7 @@ function AddPatient() {
     }
     const onSubmit = (e)=>{
         e.preventDefault();
-        ipcRenderer.send('insert-patient', { value1: name, value2: age, value3: sexe });
-        navigate('/patient')
+        ipcRenderer.send('select-data', "SELECT namePtn, CASE WHEN LOWER(namePtn) = ? THEN 'true' ELSE 'false' END AS patientStatus FROM Patients", [name.toLowerCase()]);
     }
     return (
         <>
@@ -32,7 +49,13 @@ function AddPatient() {
                         <form onSubmit={onSubmit}>
                             <div class="mb-3">
                                 <label for="nomPatient" class="form-label">Nom et prénoms</label>
-                                <input type="text" value={name} onChange={onChangeName} class="form-control" id="nomPatient" aria-describedby="emailHelp" />
+                                <input type="text" value={name} onChange={onChangeName} style={{ color: !validNamePtn ? 'red' : 'black' }} class="form-control" id="nomPatient" aria-describedby="emailHelp" />
+                                {
+                                    !validNamePtn && 
+                                    <div style={{ color: 'red' }}>
+                                        Patient déja existé
+                                    </div>
+                                }
                             </div>
                             <div class="mb-3">
                                 <label for="agePatient" class="form-label">Age</label>
