@@ -16,7 +16,7 @@ function createWindow() {
     height: 800,
     webPreferences: { nodeIntegration: true, contextIsolation: false },
   });
-  mainWindow.setMenu(null);
+  // mainWindow.setMenu(null);
   // and load the index.html of the app.
   console.log(__dirname);
   mainWindow.loadFile(path.join(__dirname, "../build/index.html"));

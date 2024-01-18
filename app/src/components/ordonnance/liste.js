@@ -41,9 +41,9 @@ function ListeFact() {
                                     <div className="fw-bold">{value.ref}</div>
                                     <div>Prix: {value.prix}Ar</div>
                                 </div>
-                                <span className="badge">
+                                {/* <span className="badge">
                                     <button className="btn btn-outline-danger" id={value.ref} onClick={onShowDetail}><i className="bi bi-ticket-detailed-fill"></i>Voir</button>
-                                </span>
+                                </span> */}
                             </li>
                         )
                     })}

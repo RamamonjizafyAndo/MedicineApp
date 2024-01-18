@@ -253,7 +253,7 @@ function CreateFact() {
                 ipcRenderer.send('buy-medicament', { value1: value.qtMed, value2: value.idMed })
                 prixTotal = prixTotal + value.prixMed + Number(consultation);
             });
-            ReactPDF.render(<CreatePdf medicament={medicament} patient={patient} prixTotal={prixTotal} consultation={consultation} date={formattedDate}/>, `./pdf/${ref}.pdf`);
+            ReactPDF.render(<CreatePdf medicament={medicament} patient={patient} prixTotal={prixTotal} consultation={consultation} date={formattedDate}/>, `${__dirname}/pdf/${ref}.pdf`);
             
             ipcRenderer.send('insert-ordonnance', {
                 value1: patient.maladie,

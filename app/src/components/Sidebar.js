@@ -28,7 +28,7 @@ function Sidebar({ children }) {
             <div className="sidebar-brand-text mx-3">RASALAMA MARTIORA</div>
           </a>
           <hr className="sidebar-divider my-0" />
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <NavLink
               to={'/'}
               className="nav-link"
@@ -39,7 +39,7 @@ function Sidebar({ children }) {
               <span>Dashboard</span> 
             </NavLink>
 
-          </li>
+          </li> */}
           <hr className="sidebar-divider" />
           <div className="sidebar-heading">Gestion</div>
           <li className="nav-item">

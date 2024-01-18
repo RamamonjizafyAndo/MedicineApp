@@ -4,11 +4,13 @@ const PDFViewer = () => {
     const {ordonnance} = useContext(UserContext);
     const [file, setFile] = useState(null)
     useEffect(()=>{
+        
         setFile(ordonnance)
+        console.log(ordonnance);
     },[ordonnance])
     return (
         <div className="container-fluid">
-            <iframe src={`../pdf/${file}.pdf`} width="100%" height="1000px" />
+            <iframe src={`${__dirname}/pdf/${file}.pdf`} width="100%" height="1000px" />
         </div>
     );
 };

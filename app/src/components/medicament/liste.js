@@ -23,7 +23,7 @@ function ListeMedic() {
     }, []);
 
     const detailMed = async (e) => {
-        await changeIdMedicament(e.target.id);
+        await changeIdMedicament(e.currentTarget.id);
         setTimeout(() => {
             navigate('/medic/detail');
         }, 500)

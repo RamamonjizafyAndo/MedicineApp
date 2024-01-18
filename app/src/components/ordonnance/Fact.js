@@ -16,7 +16,7 @@ function Fact() {
                                 activeClassName="active-link"
                                 exact
                             >
-                                <i className="bi bi-person-plus-fill"></i>{' '}
+                                <i className="bi bi-prescription2"></i>{' '}
                                 <span>Créer</span>
                             </Link>
                         </button>

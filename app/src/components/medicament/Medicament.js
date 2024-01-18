@@ -34,7 +34,7 @@ function Medic() {
               activeClassName="active-link"
               exact
             >
-              <i className="bi bi-person-plus-fill"></i>{' '}
+              <i className="bi bi-capsule-pill"></i>{' '}
               <span>Ajouter</span> 
             </Link>
                     </button>
