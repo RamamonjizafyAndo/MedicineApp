@@ -33,7 +33,8 @@ function createWindow() {
       idMed INTEGER PRIMARY KEY AUTOINCREMENT,
       nomMed TEXT NOT NULL,
       qtMed INTEGER NOT NULL,
-      prixMed REAL NOT NULL
+      prixMed REAL NOT NULL,
+      datePerrupt DATA NOT NULL
     )`);
     createMedicTable.run();
 

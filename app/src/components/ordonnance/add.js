@@ -143,7 +143,8 @@ function CreateFact() {
                         nomMed: response[0].nomMed,
                         qtMed: quantite,
                         mode: mode,
-                        prixMed: quantite * response[0].prixMed
+                        prixMed: quantite * response[0].prixMed,
+                        prixU: response[0].prixMed
                     }
                 ]
                 setMedicament(prevMedicament => [...prevMedicament, ...medicamentListener]);
@@ -234,12 +235,10 @@ function CreateFact() {
     let prixTotal = 0
     const onSubmitFinal = (e) => {
         e.preventDefault();
-        ReactPDF.render(<CreatePdf dose={mode} />, `./example.pdf`);
+        ReactPDF.render(<CreatePdf medicament={medicament} patient={patient} />, `./example.pdf`);
         medicament.map((value) => {
             ipcRenderer.send('buy-medicament', { value1: value.qtMed, value2: value.idMed })
-            console.log(value.prixMed);
             prixTotal = prixTotal + value.prixMed;
-            console.log(prixTotal);
         });
         const currentDate = new Date();
         const year = currentDate.getFullYear();

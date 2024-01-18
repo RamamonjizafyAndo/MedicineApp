@@ -24,9 +24,11 @@ function ListePatient() {
         };
     }, []); // Le tableau de dépendances vide signifie que cet effet s'exécutera une fois après le premier rendu
     
-    const onClickDetail = (e)=>{
-        changeIdUser(e.target.id);
-        navigate('/patient/detail');
+    const onClickDetail = async (e)=>{
+        await changeIdUser(e.target.id);
+        setTimeout(()=>{
+            navigate('/patient/detail');
+        },500);
     }
     return (
         <>

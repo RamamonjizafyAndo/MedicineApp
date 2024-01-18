@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
@@ -77,6 +77,13 @@ const styles = StyleSheet.create({
 });
 
 function CreatePdf(props) {
+  const [medicament, setMedicament] = useState([]);
+  const [patient, setPatient] = useState([]);
+  let i = 1
+  useEffect(()=>{
+    setMedicament(props.medicament);
+    setPatient(props.patient)
+  },[])
   return (
     <Document>
       <Page size="A5" style={styles.body}>
@@ -101,26 +108,31 @@ function CreatePdf(props) {
               <Text style={styles.tableCell}>Total(Ar)</Text>
             </View>
           </View>
-          <View style={styles.tableRow}>
+          {
+            props.medicament.map((value)=>{
+              <View style={styles.tableRow}>
             <View style={styles.colNum}>
-              <Text style={styles.tableCell}>1</Text>
+              <Text style={styles.tableCell}>{i++}</Text>
             </View>
             <View style={styles.colMedicament}>
-              <Text style={styles.tableCell}>VOLGESVIC DICLO 75MG/3ML AMP </Text>
+              <Text style={styles.tableCell}>{value.nomMed}</Text>
             </View>
             <View style={styles.colDose}>
-              <Text style={styles.tableCell}>{props.dose}</Text>
+              <Text style={styles.tableCell}>{value.mode}</Text>
             </View>
             <View style={styles.colPU}>
-              <Text style={styles.tableCell}>500</Text>
+              <Text style={styles.tableCell}>{value.prixU}</Text>
             </View>
             <View style={styles.colQté}>
-              <Text style={styles.tableCell}>5</Text>
+              <Text style={styles.tableCell}>{value.qtMed}</Text>
             </View>
             <View style={styles.colPTotal}>
-              <Text style={styles.tableCell}>2500</Text>
+              <Text style={styles.tableCell}>{value.prixMed}</Text>
             </View>
           </View>
+            })
+          }
+          
         </View>
       </Page>
     </Document>

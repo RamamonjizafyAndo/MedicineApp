@@ -8,14 +8,19 @@ function AddMedic() {
     const [qt, setQt] = useState('');
     const [prix, setPrix] = useState('');
     const [validNameMed, setValidNameMed] = useState(true);
-    const [addStatus, setAddStatus] = useState(false)
+    const [date, setDate] = useState(null);
+    const [addStatus, setAddStatus] = useState(false);
+    const onChangeDate = (e)=>{
+        setDate(e.target.value);
+        console.log(e.target.value);
+    }
     useEffect(() => {
         const addMed = (event, response) => {
             console.log(response[0]);
             if (response.find((value)=>value.medStatus=='true')) {
                 setValidNameMed(false)
             } else {
-                if((nom && qt && prix) !== ""){
+                if((nom && qt && prix && date) !== "" || null){
                     ipcRenderer.send('insert-medicament', { value1: nom, value2: qt, value3: prix });
                     navigate('/medic');
                 }
@@ -60,6 +65,12 @@ function AddMedic() {
                                         Medicament déja existé
                                     </div>
                                 }
+                            </div>
+                            <div className="mb-3">
+                                <label>
+                                    Date de pérruption
+                                </label>
+                                <input type="date" value={date} onChange={onChangeDate}/>
                             </div>
                             <div className="mb-3">
                                 <label for="qt" className="form-label">Quantité</label>

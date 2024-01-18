@@ -22,7 +22,7 @@ function DetailPatient() {
         return () => {
             ipcRenderer.removeListener('select-data-reply', handleSelectDataReply);
         };        
-    }, [idUser]);
+    }, [idUser, dataPatient]);
     
     const onDelete = (e) => {
         e.preventDefault();
