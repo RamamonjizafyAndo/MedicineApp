@@ -12,6 +12,7 @@ import CreateFact from './components/ordonnance/add';
 import ModifPatient from './components/patient/modif';
 import DetailMed from './components/medicament/detail';
 import ModifMedic from './components/medicament/modif';
+import PDFViewer from './components/ordonnance/pdfViewer';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path='/medic/modif' element={<ModifMedic />} />
         <Route path='/fact' element={<Fact />} />
         <Route path='/fact/create' element={<CreateFact />} />
+        <Route path='/fact/detail' element={<PDFViewer />} />
       </Routes>
     </Sidebar>
   );

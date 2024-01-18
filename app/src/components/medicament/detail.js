@@ -18,7 +18,7 @@ function DetailMed() {
         const handleSelectDataReply = (event, response) => {
             setDataMed(response);
         };
-
+        
         ipcRenderer.on('select-data-reply', handleSelectDataReply);
 
         // Nettoyage de l'effet

@@ -243,10 +243,12 @@ function CreateFact() {
         const year = currentDate.getFullYear();
         const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Les mois sont indexés à partir de 0
         const day = String(currentDate.getDate()).padStart(2, '0');
-        const hour = currentDate.getHours()
+        const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
         const formattedDate = `${day}-${month}-${year}`;
         if(patient && medicament && consultation){
-            const ref = `${patient.namePtn}-${formattedDate}-${hour}`
+            const ref = `${patient.namePtn}-${formattedDate}-${hours}:${minutes}:${seconds}`
             medicament.map((value) => {
                 ipcRenderer.send('buy-medicament', { value1: value.qtMed, value2: value.idMed })
                 prixTotal = prixTotal + value.prixMed + Number(consultation);

@@ -10,6 +10,8 @@ function DetailPatient() {
     const [dataPatient, setDataPatient] = useState([]);
     const [onSuppr, setOnSuppr] = useState(false);
     useEffect(() => {
+        console.log(idUser);
+        console.log(dataPatient);
         if (idUser) {
             ipcRenderer.send('select-data', 'SELECT * FROM Patients WHERE idPtn = ?', [idUser]);
         }

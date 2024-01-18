@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
+import { useNavigate } from "react-router-dom";
 function ListeFact() {
     const [data, setData] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         // Envoyer la requête pour sélectionner les données
         ipcRenderer.send('select-data', 'SELECT * FROM Ordonnances');
@@ -32,7 +34,7 @@ function ListeFact() {
                                     <div>Prix: {value.prix}Ar</div>
                                 </div>
                                 <span className="badge">
-                                    <button className="btn btn-outline-danger"><i className="bi bi-ticket-detailed-fill"></i>Voir</button>
+                                    <button className="btn btn-outline-danger" onClick={(e)=>navigate('/fact/detail')}><i className="bi bi-ticket-detailed-fill"></i>Voir</button>
                                 </span>
                             </li>
                         )
