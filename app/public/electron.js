@@ -86,8 +86,8 @@ function createWindow() {
     });
 
     ipcMain.on('insert-medicament', async (event, data) => {
-      const insertMed = db.prepare(`INSERT INTO Medicaments (nomMed, qtMed, prixMed) VALUES (?, ?, ?)`);
-      insertMed.run(data.value1, data.value2, data.value3);
+      const insertMed = db.prepare(`INSERT INTO Medicaments (nomMed, qtMed, prixMed, datePerrupt) VALUES (?, ?, ?, ?)`);
+      insertMed.run(data.value1, data.value2, data.value3, data.value4);
     });
 
     ipcMain.on('buy-medicament', async (event, data) => {

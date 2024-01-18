@@ -474,9 +474,7 @@ function CreateFact() {
                             <div className="card-text">
                                 <div class="mb-3">
                                     <label className="form-label" for="consultation">Prix du consultation</label>
-                                    <div className="form-control">
-                                        <input type="number" onChange={onChangeConsultation} value={consultation} id="consultation"/>
-                                    </div>
+                                    <input className="form-control" type="number" onChange={onChangeConsultation} value={consultation} id="consultation"/>
                                 </div>
                             </div>
                             <div className="card-text display-flex">

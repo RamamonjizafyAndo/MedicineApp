@@ -44,6 +44,7 @@ function DetailMed() {
                                     <p className="card-text">Nom: {value.nomMed}</p>
                                     <p className="card-text">Prix: {value.prixMed}</p>
                                     <p className="card-text">Quantité: {value.qtMed}</p>
+                                    <p className="card-text">Date de perruption: {value.datePerrupt}</p>
                                     <p>
                                         <button className="p-2 g-col-6 btn btn-outline-primary" onClick={(e) => { navigate('/medic/modif') }}>Modifier</button>
                                     </p>

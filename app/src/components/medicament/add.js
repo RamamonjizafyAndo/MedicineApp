@@ -12,7 +12,6 @@ function AddMedic() {
     const [addStatus, setAddStatus] = useState(false);
     const onChangeDate = (e)=>{
         setDate(e.target.value);
-        console.log(e.target.value);
     }
     useEffect(() => {
         const addMed = (event, response) => {
@@ -21,7 +20,7 @@ function AddMedic() {
                 setValidNameMed(false)
             } else {
                 if((nom && qt && prix && date) !== "" || null){
-                    ipcRenderer.send('insert-medicament', { value1: nom, value2: qt, value3: prix });
+                    ipcRenderer.send('insert-medicament', { value1: nom, value2: qt, value3: prix, value4: date });
                     navigate('/medic');
                 }
             }
@@ -66,12 +65,12 @@ function AddMedic() {
                                     </div>
                                 }
                             </div>
-                            {/* <div className="mb-3">
-                                <label>
-                                    Date de pérruption
+                            <div className="mb-3">
+                                <label className="form-label">
+                                    Date de peremption
                                 </label>
-                                <input type="date" value={date} onChange={onChangeDate}/>
-                            </div> */}
+                                <input type="date" value={date} onChange={onChangeDate} className="form-control"/>
+                            </div>
                             <div className="mb-3">
                                 <label for="qt" className="form-label">Quantité</label>
                                 <input type="number" value={qt} onChange={onChangeQt} className="form-control" id="qt " />
