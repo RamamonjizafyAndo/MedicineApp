@@ -16,6 +16,7 @@ function createWindow() {
     height: 800,
     webPreferences: { nodeIntegration: true, contextIsolation: false },
   });
+  mainWindow.setMenu(null);
   // and load the index.html of the app.
   console.log(__dirname);
   mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
@@ -34,7 +35,7 @@ function createWindow() {
       nomMed TEXT NOT NULL,
       qtMed INTEGER NOT NULL,
       prixMed REAL NOT NULL,
-      datePerrupt DATA NOT NULL
+      datePerrupt DATE
     )`);
     createMedicTable.run();
 
@@ -94,8 +95,6 @@ function createWindow() {
       const updateMed = db.prepare(`UPDATE Medicaments SET qtMed = qtMed - ? WHERE idMed = ?`);
       updateMed.run(data.value1, data.value2);
     });
-
-    
 
     ipcMain.on('select-data', (event, query, params) => {
       try {

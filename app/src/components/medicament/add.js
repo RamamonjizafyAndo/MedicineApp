@@ -66,12 +66,12 @@ function AddMedic() {
                                     </div>
                                 }
                             </div>
-                            <div className="mb-3">
+                            {/* <div className="mb-3">
                                 <label>
                                     Date de pérruption
                                 </label>
                                 <input type="date" value={date} onChange={onChangeDate}/>
-                            </div>
+                            </div> */}
                             <div className="mb-3">
                                 <label for="qt" className="form-label">Quantité</label>
                                 <input type="number" value={qt} onChange={onChangeQt} className="form-control" id="qt " />

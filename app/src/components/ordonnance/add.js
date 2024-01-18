@@ -30,6 +30,7 @@ function CreateFact() {
     const [currentSearchType, setCurrentSearchType] = useState(null);
     const [currentAddType, setCurrentAddType] = useState(null);
     const [formatPapier, setFormatPapier] = useState("");
+    const [consultation, setConsultation] = useState(0);
     const onChangeFormat = (e) => {
         setFormatPapier(e.target.value);
     }
@@ -232,32 +233,39 @@ function CreateFact() {
         setSearchPatient('');
         setValidatedAddPtn(false);
     }
+    const onChangeConsultation = (e)=>{
+        setConsultation(e.target.value);
+    }
     let prixTotal = 0
     const onSubmitFinal = (e) => {
         e.preventDefault();
-        ReactPDF.render(<CreatePdf medicament={medicament} patient={patient} />, `./example.pdf`);
-        medicament.map((value) => {
-            ipcRenderer.send('buy-medicament', { value1: value.qtMed, value2: value.idMed })
-            prixTotal = prixTotal + value.prixMed;
-        });
         const currentDate = new Date();
         const year = currentDate.getFullYear();
         const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Les mois sont indexés à partir de 0
         const day = String(currentDate.getDate()).padStart(2, '0');
+        const hour = currentDate.getHours()
         const formattedDate = `${day}-${month}-${year}`;
-        const ref = `${patient.namePtn}-${formattedDate}`
-        ipcRenderer.send('insert-ordonnance', {
-            value1: patient.maladie,
-            value2: patient.temperature,
-            value3: patient.poids,
-            value4: patient.tension,
-            value5: patient.oxygene,
-            value6: prixTotal,
-            value7: formattedDate,
-            value8: patient.idPtn,
-            value9: ref
-        });
-        navigate('/fact')
+        if(patient && medicament && consultation){
+            const ref = `${patient.namePtn}-${formattedDate}-${hour}`
+            medicament.map((value) => {
+                ipcRenderer.send('buy-medicament', { value1: value.qtMed, value2: value.idMed })
+                prixTotal = prixTotal + value.prixMed + Number(consultation);
+            });
+            ReactPDF.render(<CreatePdf medicament={medicament} patient={patient} prixTotal={prixTotal} consultation={consultation} date={formattedDate}/>, `./pdf/${ref}.pdf`);
+            
+            ipcRenderer.send('insert-ordonnance', {
+                value1: patient.maladie,
+                value2: patient.temperature,
+                value3: patient.poids,
+                value4: patient.tension,
+                value5: patient.oxygene,
+                value6: prixTotal,
+                value7: formattedDate,
+                value8: patient.idPtn,
+                value9: ref
+            });
+            navigate('/fact')
+        }
     }
     return (
         <>
@@ -465,18 +473,9 @@ function CreateFact() {
                             </div>
                             <div className="card-text">
                                 <div class="mb-3">
-                                    <label class="form-label">Format</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="format" value="A5" checked={formatPapier === "A5"} onChange={onChangeFormat} id="flexRadioDefault1" />
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            A5
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="format" value="rouleau" checked={formatPapier === "rouleau"} onChange={onChangeFormat} id="flexRadioDefault2" />
-                                        <label class="form-check-label" for="flexRadioDefault2">
-                                            Papier rouleau
-                                        </label>
+                                    <label className="form-label" for="consultation">Prix du consultation</label>
+                                    <div className="form-control">
+                                        <input type="number" onChange={onChangeConsultation} value={consultation} id="consultation"/>
                                     </div>
                                 </div>
                             </div>
