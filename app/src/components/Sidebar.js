@@ -35,7 +35,7 @@ function Sidebar({ children }) {
               activeClassName="active-link"
               exact
             >
-              <i class="bi bi-kanban"></i>{' '}
+              <i className="bi bi-kanban"></i>{' '}
               <span>Dashboard</span> 
             </NavLink>
 
@@ -61,7 +61,7 @@ function Sidebar({ children }) {
               activeClassName="active-link"
               exact
             >
-              <i class="bi bi-capsule"></i>{' '}
+              <i className="bi bi-capsule"></i>{' '}
               <span>Médicaments</span>
             </NavLink>
 
@@ -75,7 +75,7 @@ function Sidebar({ children }) {
               activeClassName="active-link"
               exact
             >
-              <i class="bi bi-file-earmark-medical-fill"></i>{' '}
+              <i className="bi bi-file-earmark-medical-fill"></i>{' '}
               <span>Ordonnance</span>
             </NavLink>
 

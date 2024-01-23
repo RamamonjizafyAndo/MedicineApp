@@ -3,11 +3,9 @@ import { ipcRenderer } from "electron";
 import ReactPDF from '@react-pdf/renderer';
 import CreatePdf from "./createPdf";
 import { useNavigate } from "react-router-dom";
-
 function CreateFact() {
     const navigate = useNavigate();
     const [patient, setPatient] = useState(null);
-    const [idPtn, setIdPtn] = useState('');
     const [validQtMed, setValidQtMed] = useState(true);
     const [searchMedicament, setSearchMedicament] = useState('');
     const [isSearchMedicament, setIsSearchMedicament] = useState(false)
@@ -29,11 +27,7 @@ function CreateFact() {
     const [selectedPtn, setSelectedPtn] = useState(null);
     const [currentSearchType, setCurrentSearchType] = useState(null);
     const [currentAddType, setCurrentAddType] = useState(null);
-    const [formatPapier, setFormatPapier] = useState("");
     const [consultation, setConsultation] = useState(0);
-    const onChangeFormat = (e) => {
-        setFormatPapier(e.target.value);
-    }
     const onChangeTemp = (e) => {
         if (e.target.value <= 0 || selectedPtn == null || bilan == '' || poids <= 0 || tension == "" || oxygene == "") {
             setValidatedAddPtn(false)
@@ -79,7 +73,7 @@ function CreateFact() {
         console.log(quantite);
 
     }
-    const onCHangeMode = (e) => {
+    const onChangeMode = (e) => {
         if (e.target.value === '' || quantite <= 0 || !quantite || selectedMed === null) {
             setValidatedMed(false)
         } else {
@@ -206,14 +200,12 @@ function CreateFact() {
 
     const addPtnOrdonnance = (e) => {
         e.preventDefault();
-        setIdPtn(selectedPtn);
         ipcRenderer.send('select-data', 'SELECT * FROM Patients WHERE idPtn = ?', [selectedPtn]);
         setCurrentAddType('patient');
     }
 
     const addMednOrdonnance = async (e) => {
         e.preventDefault();
-        setIdPtn(selectedMed);
         await ipcRenderer.send('select-data', 'SELECT * FROM Medicaments WHERE idMed = ?', [selectedMed]);
         setCurrentAddType('medicament');
         setIsSearchMedicament(false);
@@ -237,7 +229,7 @@ function CreateFact() {
         setConsultation(e.target.value);
     }
     let prixTotal = 0
-    const onSubmitFinal = (e) => {
+    const onSubmitFinal = async (e) => {
         e.preventDefault();
         const currentDate = new Date();
         const year = currentDate.getFullYear();
@@ -253,8 +245,11 @@ function CreateFact() {
                 ipcRenderer.send('buy-medicament', { value1: value.qtMed, value2: value.idMed })
                 prixTotal = prixTotal + value.prixMed + Number(consultation);
             });
-            ReactPDF.render(<CreatePdf medicament={medicament} patient={patient} prixTotal={prixTotal} consultation={consultation} date={formattedDate}/>, `${__dirname}/pdf/${ref}.pdf`);
-            
+            try{
+                await ReactPDF.render(<CreatePdf medicament={medicament} patient={patient} prixTotal={prixTotal} consultation={consultation} date={formattedDate}/>, `./${ref}.pdf`);
+            }catch(err){
+                console.log(err);
+            }
             ipcRenderer.send('insert-ordonnance', {
                 value1: patient.maladie,
                 value2: patient.temperature,
@@ -432,7 +427,7 @@ function CreateFact() {
                                             <label for="bilan" className="form-label">
                                                 Mode d'utilisation
                                             </label>
-                                            <textarea rows={3} type="text" id="bilan" className="form-control" value={mode} onChange={onCHangeMode} />
+                                            <textarea rows={3} type="text" id="bilan" className="form-control" value={mode} onChange={onChangeMode} />
                                         </div>
                                         <button className="btn btn-primary" disabled={!validatedMed} type="onSubmit">Ajouter</button>
                                     </form>

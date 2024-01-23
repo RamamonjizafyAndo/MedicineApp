@@ -56,7 +56,7 @@ function AddMedic() {
                     <div className="card-body">
                         <form onSubmit={onSubmit}>
                             <div className="mb-3">
-                                <label for="nomMed" className="form-label">Désignation</label>
+                                <label htmlFor="nomMed" className="form-label">Désignation</label>
                                 <input type="text" style={{ color: !validNameMed ? 'red' : 'black' }} value={nom} onChange={onChangeLabel} className="form-control" id="nomMed" aria-describedby="nomMed" />
                                 {
                                     !validNameMed && 
@@ -72,11 +72,11 @@ function AddMedic() {
                                 <input type="date" value={date} onChange={onChangeDate} className="form-control"/>
                             </div>
                             <div className="mb-3">
-                                <label for="qt" className="form-label">Quantité</label>
+                                <label htmlFor="qt" className="form-label">Quantité</label>
                                 <input type="number" value={qt} onChange={onChangeQt} className="form-control" id="qt " />
                             </div>
                             <div className="mb-3">
-                                <label className="form-label" for='prix'>Prix</label>
+                                <label className="form-label" htmlFor='prix'>Prix</label>
                                 <input type="number" value={prix} onChange={onChangePrix} className="form-control" id="prix " />
                             </div>
                             <button type="submit" className="btn btn-primary"><i className="bi bi-database-fill-add"></i>{' '}Ajouter</button>

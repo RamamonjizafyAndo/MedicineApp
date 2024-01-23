@@ -42,7 +42,7 @@ function ListeMedic() {
                     {data && data.map((value) => {
                         const datePassed = value.datePerrupt && isDatePassed(value.datePerrupt);
                         return (
-                            <li className={`list-group-item d-flex justify-content-between align-items-start ${datePassed ? 'text-danger' : ''}`}>
+                            <li key={value.idMed} className={`list-group-item d-flex justify-content-between align-items-start ${datePassed ? 'text-danger' : ''}`}>
                                 <div className="ms-2 me-auto">
                                     <div className="fw-bold">{value.nomMed}</div>
                                     <div>Quantité: {value.qtMed}</div>

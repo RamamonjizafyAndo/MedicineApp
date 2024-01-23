@@ -163,7 +163,7 @@ function CreatePdf(props) {
           {
             props.medicament.map((value) => {
               return (
-                <View style={styles.tableRow}>
+                <View key={value.idMed} style={styles.tableRow}>
                   <View style={styles.colNum}>
                     <Text style={styles.tableCell}>{i++}</Text>
                   </View>

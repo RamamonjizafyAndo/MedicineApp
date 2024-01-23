@@ -12,6 +12,10 @@
 /build
 /dist
 /pdf
+/*.zip
+/release-builds
+
+#development
 
 # misc
 .DS_Store

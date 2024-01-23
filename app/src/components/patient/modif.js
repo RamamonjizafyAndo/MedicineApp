@@ -41,30 +41,30 @@ function ModifPatient() {
                 <div className="card">
                     <div className="card-body">
                         <form onSubmit={onSubmit}>
-                            <div class="mb-3">
-                                <label for="nomPatient" class="form-label">Nom et prénoms</label>
-                                <input type="text" value={name} onChange={onChangeName} class="form-control" id="nomPatient" aria-describedby="emailHelp" />
+                            <div className="mb-3">
+                                <label htmlFor="nomPatient" className="form-label">Nom et prénoms</label>
+                                <input type="text" value={name} onChange={onChangeName} className="form-control" id="nomPatient" aria-describedby="emailHelp" />
                             </div>
-                            <div class="mb-3">
-                                <label for="agePatient" class="form-label">Age</label>
-                                <input type="number" onChange={onChangeAge} value={age} class="form-control" id="agePatient " />
+                            <div className="mb-3">
+                                <label htmlFor="agePatient" className="form-label">Age</label>
+                                <input type="number" onChange={onChangeAge} value={age} className="form-control" id="agePatient " />
                             </div>
-                            <div class="mb-3 form-check">
-                                <label class="form-label">Sexe</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="sexe" value="Homme" checked={sexe === "Homme"} onChange={onChangeSexe} id="flexRadioDefault1" />
-                                    <label class="form-check-label" for="flexRadioDefault1">
+                            <div className="mb-3 form-check">
+                                <label className="form-label">Sexe</label>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="sexe" value="Homme" checked={sexe === "Homme"} onChange={onChangeSexe} id="flexRadioDefault1" />
+                                    <label className="form-check-label" htmlFor="flexRadioDefault1">
                                         Homme
                                     </label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="sexe" value="Femme" checked={sexe === "Femme"} onChange={onChangeSexe} id="flexRadioDefault2" />
-                                    <label class="form-check-label" for="flexRadioDefault2">
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="sexe" value="Femme" checked={sexe === "Femme"} onChange={onChangeSexe} id="flexRadioDefault2" />
+                                    <label className="form-check-label" htmlFor="flexRadioDefault2">
                                         Femme
                                     </label>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary"><i className="bi bi-person-plus-fill"></i>{' '}Modifier</button>
+                            <button type="submit" className="btn btn-primary"><i className="bi bi-person-plus-fill"></i>{' '}Modifier</button>
                         </form>
                     </div>
                 </div>

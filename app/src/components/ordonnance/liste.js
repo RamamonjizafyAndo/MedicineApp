@@ -24,7 +24,8 @@ function ListeFact() {
         };
     }, []); // Le tableau de dépendances vide signifie que cet effet s'exécutera une fois après le premier rendu
     const onShowDetail = async(e)=>{
-        await changeOrdonnance(e.target.id);
+        console.log(e.currentTarget.id);
+        await changeOrdonnance(e.currentTarget.id);
         setTimeout(()=>{
             navigate('/fact/detail');
         },500)
@@ -33,7 +34,7 @@ function ListeFact() {
     return (
         <> 
             <div className="card" >
-                <ol class="list-group list-group-numbered">
+                <ol className="list-group list-group-numbered">
                     {data && data.map((value) => {
                         return (
                             <li className="list-group-item d-flex justify-content-between align-items-start" key={value.ref}>
@@ -41,9 +42,9 @@ function ListeFact() {
                                     <div className="fw-bold">{value.ref}</div>
                                     <div>Prix: {value.prix}Ar</div>
                                 </div>
-                                {/* <span className="badge">
+                                <span className="badge">
                                     <button className="btn btn-outline-danger" id={value.ref} onClick={onShowDetail}><i className="bi bi-ticket-detailed-fill"></i>Voir</button>
-                                </span> */}
+                                </span>
                             </li>
                         )
                     })}
