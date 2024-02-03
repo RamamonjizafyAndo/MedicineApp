@@ -6,19 +6,22 @@ const { ipcRenderer } = require('electron');
 function ModifMedic() {
     const { idMedicament } = useContext(UserContext)
     const navigate = useNavigate();
-    const [nom, setNom] = useState('');
-    const [qt, setQt] = useState('');
-    const [prix, setPrix] = useState('');
-    const [valid, setValid] = useState(true)
+    const [medicament, setMedicament] = useState({
+        nom: '',
+        qt: '',
+        prix: ''
+    });
     useEffect(() => {
         if (idMedicament) {
             ipcRenderer.send('select-data', 'SELECT * FROM Medicaments WHERE idMed = ?', [idMedicament]);
         }
 
         const handleSelectDataReply = (event, response) => {
-            setNom(response[0].nomMed);
-            setQt(response[0].qtMed);
-            setPrix(response[0].prixMed);
+            setMedicament({
+                nom:response[0].nomMed,
+                qt:response[0].qtMed,
+                prix:response[0].prixMed
+            })
         };
 
         ipcRenderer.on('select-data-reply', handleSelectDataReply);
@@ -28,36 +31,12 @@ function ModifMedic() {
             ipcRenderer.removeListener('select-data-reply', handleSelectDataReply);
         };
     }, [idMedicament]);
-    const onChangeLabel = (e) => {
-        setNom(e.target.value);
-        if (e.target.value === "" || prix <=0 || qt < 0) {
-            setValid(false);
-        }else{
-            setValid(true);
-        }
-    }
-    const onChangeQt = (e) => {
-        setQt(e.target.value);
-        if (e.target.value < 0 || prix <=0 || nom === "") {
-            setValid(false);
-        }else{
-            setValid(true);
-        }
-    }
-    const onChangePrix = (e) => {
-        setPrix(e.target.value);
-        if (e.target.value <= 0 || qt <0 || nom === "") {
-            setValid(false);
-        }else{
-            setValid(true);
-        }
-    }
     const onSubmit = (e) => {
         e.preventDefault();
-        if(qt === ""){
-            setQt(0);
+        if(medicament.qt === ""){
+            setMedicament({...medicament, qt:0})
         }
-        ipcRenderer.send('modif-medicament', { value1: nom, value2: qt, value3: prix, value4: idMedicament });
+        ipcRenderer.send('modif-medicament', { value1: medicament.nom, value2: medicament.qt, value3: medicament.prix, value4: idMedicament });
         navigate('/medic');
     }
     return (
@@ -71,17 +50,17 @@ function ModifMedic() {
                         <form onSubmit={onSubmit}>
                             <div className="mb-3">
                                 <label htmlFor="nomMed" className="form-label">Désignation</label>
-                                <input type="text" value={nom} onChange={onChangeLabel} className="form-control" id="nomMed" aria-describedby="nomMed" />
+                                <input type="text" value={medicament.nom} onChange={(e)=>{setMedicament({...medicament, nom: e.target.value})}} className="form-control" id="nomMed" aria-describedby="nomMed" />
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="qt" className="form-label">Quantité</label>
-                                <input type="number" value={qt} onChange={onChangeQt} className="form-control" id="qt " />
+                                <input type="number" value={medicament.qt} onChange={(e)=> setMedicament({...medicament, qt: e.target.value})} className="form-control" id="qt " />
                             </div>
                             <div className="mb-3">
                                 <label className="form-label" htmlFor='prix'>Prix</label>
-                                <input type="number" value={prix} onChange={onChangePrix} className="form-control" id="prix " />
+                                <input type="number" value={medicament.prix} onChange={(e)=>{setMedicament({...medicament, prix: e.target.value})}} className="form-control" id="prix " />
                             </div>
-                            <button type="submit" className="btn btn-primary" disabled={!valid}><i className="bi bi-database-fill-add"></i>{' '}Modifier</button>
+                            <button type="submit" className="btn btn-primary" disabled={(medicament.prix || medicament.qt ) < 0 || medicament.nom == ''}><i className="bi bi-database-fill-add"></i>{' '}Modifier</button>
                         </form>
                     </div>
                 </div>

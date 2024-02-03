@@ -9,8 +9,6 @@ function DetailMed() {
     const [dataMed, setDataMed] = useState([]);
     const [onSuppr, setOnSuppr] = useState(false)
     useEffect(() => {
-        console.log(idMedicament);
-        console.log(dataMed);
         if (idMedicament) {
             ipcRenderer.send('select-data', 'SELECT * FROM Medicaments WHERE idMed = ?', [idMedicament]);
         }
@@ -25,7 +23,7 @@ function DetailMed() {
         return () => {
             ipcRenderer.removeListener('select-data-reply', handleSelectDataReply);
         };
-    }, [idMedicament, dataMed]);
+    }, [idMedicament]);
     const onDelete = (e) => {
         ipcRenderer.send('delete-medicament', { value1: idMedicament });
         navigate('/medic');

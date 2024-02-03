@@ -469,7 +469,7 @@ function CreateFact() {
                                 Date du jour : {new Date().getDate()}-{new Date().getMonth() + 1}-{new Date().getFullYear()}
                             </div>
                             <div className="card-text">
-                                <div class="mb-3">
+                                <div className="mb-3">
                                     <label className="form-label" for="consultation">Prix du consultation</label>
                                     <input className="form-control" type="number" onChange={onChangeConsultation} value={consultation} id="consultation"/>
                                 </div>
