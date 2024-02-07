@@ -5,6 +5,21 @@ import CreatePdf from "./createPdf";
 import { useNavigate } from "react-router-dom";
 function CreateFact() {
     const navigate = useNavigate();
+    const [patientInfo, setPatientInfo] = useState({
+        bilan: '',
+        temperature: '',
+        poids: '',
+        tension: '',
+        oxygene: '',
+        selectedPtn: ''
+    })
+
+    const [medicamentInfo, setMedicamentInfo] = useState({
+        quantite: '',
+        mode: '',
+        consultation: ''
+    })
+
     const [patient, setPatient] = useState(null);
     const [validQtMed, setValidQtMed] = useState(true);
     const [searchMedicament, setSearchMedicament] = useState('');
@@ -15,85 +30,27 @@ function CreateFact() {
     const [dataMedicament, setDataMedicament] = useState([]);
     const [validatedAddPrn, setValidatedAddPtn] = useState(false);
     const [validatedMed, setValidatedMed] = useState(false);
-    const [bilan, setBilan] = useState('');
-    const [temperature, setTemperature] = useState('');
-    const [poids, setPoids] = useState();
-    const [tension, setTension] = useState();
-    const [oxygene, setOxygene] = useState();
-    const [quantite, setQuantite] = useState();
-    const [mode, setMode] = useState('');
     const [medicament, setMedicament] = useState([]);
     const [selectedMed, setSelectedMed] = useState(null);
     const [selectedPtn, setSelectedPtn] = useState(null);
     const [currentSearchType, setCurrentSearchType] = useState(null);
     const [currentAddType, setCurrentAddType] = useState(null);
-    const [consultation, setConsultation] = useState(0);
-    const onChangeTemp = (e) => {
-        if (e.target.value <= 0 || selectedPtn == null || bilan == '' || poids <= 0 || tension == "" || oxygene == "") {
-            setValidatedAddPtn(false)
-        } else {
-            setValidatedAddPtn(true)
-        }
-        setTemperature(e.target.value);
-    }
-    const onChangePoids = (e) => {
-        if (e.target.value <= 0 || selectedPtn == null || bilan == '' || temperature <= 0 || tension == "" || oxygene == "") {
-            setValidatedAddPtn(false)
-        } else {
-            setValidatedAddPtn(true)
-        }
-        setPoids(e.target.value);
-    }
-    const onChangeTension = (e) => {
-        if (e.target.value == "" || selectedPtn == null || bilan == '' || poids <= 0 || temperature <= 0 || oxygene == "") {
-            setValidatedAddPtn(false)
-        } else {
-            setValidatedAddPtn(true)
-        }
-        setTension(e.target.value);
-    }
-    const onChangeOxygene = (e) => {
-        if (e.target.value == "" || selectedPtn == null || bilan == '' || poids <= 0 || tension == "" || temperature <= 0) {
-            setValidatedAddPtn(false)
-        } else {
-            setValidatedAddPtn(true)
-        }
-        setOxygene(e.target.value);
-    }
     const onChangeQuantite = (e) => {
 
-        if (e.target.value <= 0 || !e.target.value || mode === '' || selectedMed === null || !validQtMed) {
+        if (e.target.value <= 0 || !e.target.value || medicamentInfo.mode === '' || selectedMed === null || !validQtMed) {
             setValidatedMed(false)
         } else {
             setValidatedMed(true)
         }
-        setQuantite(e.target.value);
+        setMedicamentInfo({ ...medicamentInfo, quantite: e.target.value })
         ipcRenderer.send('select-data', "SELECT CASE WHEN qtMed >= ? THEN 'true' ELSE 'false' END AS qtStatus FROM Medicaments WHERE idMed = ?", [parseInt(e.target.value), selectedMed]);
         setCurrentAddType('checkQtMed');
-        console.log(quantite);
+    }
 
-    }
-    const onChangeMode = (e) => {
-        if (e.target.value === '' || quantite <= 0 || !quantite || selectedMed === null) {
-            setValidatedMed(false)
-        } else {
-            setValidatedMed(true)
-        }
-        setMode(e.target.value);
-    }
-    const onChangeBilan = (e) => {
-        if (e.target.value == "" || selectedPtn == null || oxygene == '' || poids <= 0 || tension == "" || temperature <= 0) {
-            setValidatedAddPtn(false)
-        } else {
-            setValidatedAddPtn(true)
-        }
-        setBilan(e.target.value)
-    }
     const handleRadioChangeMed = (event) => {
-        console.log(medicament);
         setSelectedMed(event.target.id);
         console.log(JSON.stringify(medicament.find((medicament) => String(medicament.idMed) === String(event.target.id))));
-        if (mode === '' || quantite <= 0 || event.target.id === null || JSON.stringify(medicament.find((medicament) => String(medicament.idMed) === String(event.target.id)))) {
+        if (medicamentInfo.mode === '' || medicamentInfo.quantite <= 0 || event.target.id === null || JSON.stringify(medicament.find((medicament) => String(medicament.idMed) === String(event.target.id)))) {
             setValidatedMed(false)
         } else {
             setValidatedMed(true)
@@ -101,7 +58,7 @@ function CreateFact() {
     };
     const handleRadioChangePtn = (e) => {
         setSelectedPtn(e.target.id);
-        if (e.target.id == "" || oxygene == "" || bilan == '' || poids <= 0 || tension == "" || temperature <= 0) {
+        if (e.target.id == "" || patientInfo.oxygene == "" || patientInfo.bilan == '' || patientInfo.poids <= 0 || patientInfo.tension == "" || patientInfo.temperature <= 0) {
             setValidatedAddPtn(false)
         } else {
             setValidatedAddPtn(true)
@@ -123,22 +80,21 @@ function CreateFact() {
                     namePtn: response[0].namePtn,
                     agePtn: response[0].agePtn,
                     sexePtn: response[0].sexePtn,
-                    maladie: bilan,
-                    temperature: temperature,
-                    poids: poids,
-                    tension: tension,
-                    oxygene: oxygene
+                    maladie: patientInfo.bilan,
+                    temperature: patientInfo.temperature,
+                    poids: patientInfo.poids,
+                    tension: patientInfo.tension,
+                    oxygene: patientInfo.oxygene
                 }
                 setPatient(patientListener);
             } else if (currentAddType === 'medicament') {
-                console.log(quantite);
                 const medicamentListener = [
                     {
                         idMed: response[0].idMed,
                         nomMed: response[0].nomMed,
-                        qtMed: quantite,
-                        mode: mode,
-                        prixMed: quantite * response[0].prixMed,
+                        qtMed: medicamentInfo.quantite,
+                        mode: medicamentInfo.mode,
+                        prixMed: medicamentInfo.quantite * response[0].prixMed,
                         prixU: response[0].prixMed
                     }
                 ]
@@ -164,24 +120,8 @@ function CreateFact() {
             ipcRenderer.removeListener('searchDataResponse', searchDataResponseListener);
             ipcRenderer.removeListener('select-data-reply', addDataResponseListener);
         };
-    }, [currentSearchType, currentAddType, quantite]);
-    const onChangeSearchMedicament = (e) => {
+    }, [currentSearchType, currentAddType, medicamentInfo.quantite]);
 
-        if (e.target.value == '') {
-            setIsSearchMedicament(false);
-            setSelectedMed(null);
-            setValidatedMed(false);
-        }
-        setSearchMedicament(e.target.value);
-    }
-    const onChangeSearchPatient = (e) => {
-        if (e.target.value == '') {
-            setIsSearchPatient(false);
-            setSelectedPtn(null);
-            setValidatedAddPtn(false);
-        }
-        setSearchPatient(e.target.value)
-    }
     const onSearchPatient = (e) => {
         e.preventDefault();
 
@@ -225,9 +165,7 @@ function CreateFact() {
         setSearchPatient('');
         setValidatedAddPtn(false);
     }
-    const onChangeConsultation = (e)=>{
-        setConsultation(e.target.value);
-    }
+
     let prixTotal = 0
     const onSubmitFinal = async (e) => {
         e.preventDefault();
@@ -236,18 +174,18 @@ function CreateFact() {
         const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Les mois sont indexés à partir de 0
         const day = String(currentDate.getDate()).padStart(2, '0');
         const hours = String(currentDate.getHours()).padStart(2, '0');
-    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
         const formattedDate = `${day}-${month}-${year}`;
-        if(patient && medicament && consultation){
+        if (patient && medicament && medicamentInfo.consultation) {
             const ref = `${patient.namePtn}-${formattedDate}-${hours}:${minutes}:${seconds}`
             medicament.map((value) => {
                 ipcRenderer.send('buy-medicament', { value1: value.qtMed, value2: value.idMed })
-                prixTotal = prixTotal + value.prixMed + Number(consultation);
+                prixTotal = prixTotal + value.prixMed + Number(medicamentInfo.consultation);
             });
-            try{
-                await ReactPDF.render(<CreatePdf medicament={medicament} patient={patient} prixTotal={prixTotal} consultation={consultation} date={formattedDate}/>, `./${ref}.pdf`);
-            }catch(err){
+            try {
+                await ReactPDF.render(<CreatePdf medicament={medicament} patient={patient} prixTotal={prixTotal} consultation={medicamentInfo.consultation} date={formattedDate} />, `./${ref}.pdf`);
+            } catch (err) {
                 console.log(err);
             }
             ipcRenderer.send('insert-ordonnance', {
@@ -275,13 +213,20 @@ function CreateFact() {
                                 <h5 className="card-title">Patient</h5>
                                 <p className="card-text">
                                     <form className="d-flex" role="search" onSubmit={onSearchPatient}>
-                                        <input className="form-control me-2" type="search" onChange={onChangeSearchPatient} value={searchPatient} placeholder="Recherche" aria-label="Recherche" />
+                                        <input className="form-control me-2" type="search" onChange={(e) => {
+                                            if (e.target.value == '') {
+                                                setIsSearchPatient(false);
+                                                setSelectedPtn(null);
+                                                setValidatedAddPtn(false);
+                                            }
+                                            setSearchPatient(e.target.value)
+                                        }} value={searchPatient} placeholder="Recherche" aria-label="Recherche" />
                                         <button className="btn btn-outline-success" type="submit">Recherche</button>
                                     </form>
                                 </p>
                                 {
                                     isSearchPatient && <div className="card-text">
-                                        <div className="card" style={{maxHeight:'100px',overflowY:'scroll'}}>
+                                        <div className="card" style={{ maxHeight: '100px', overflowY: 'scroll' }}>
                                             <ol className="list-group list-group-numbered">
                                                 {dataPatient && dataPatient.map((value) => {
                                                     return (
@@ -313,7 +258,7 @@ function CreateFact() {
                                             <label for="bilan" className="form-label">
                                                 Bilan du patient
                                             </label>
-                                            <input type="text" id="bilan" className="form-control" value={bilan} onChange={onChangeBilan} />
+                                            <input type="text" id="bilan" className="form-control" value={patientInfo.bilan} onChange={(e) => { setPatientInfo({ ...patientInfo, bilan: e.target.value }) }} />
                                         </div>
                                         <div className="mb-3">
                                             <div className="container text-center">
@@ -332,10 +277,10 @@ function CreateFact() {
                                                     </label>
                                                 </div>
                                                 <div className="row">
-                                                    <input type="number" value={temperature} onChange={onChangeTemp} width={50} className="col form-control" />
-                                                    <input type="text" value={tension} onChange={onChangeTension} width={50} className="col form-control" />
-                                                    <input type="text" width={50} value={oxygene} onChange={onChangeOxygene} className="col form-control" />
-                                                    <input type="number" width={50} value={poids} onChange={onChangePoids} className="col form-control" />
+                                                    <input type="number" value={patientInfo.temperature} onChange={(e) => { setPatientInfo({ ...patientInfo, temperature: e.target.value }) }} width={50} className="col form-control" />
+                                                    <input type="text" value={patientInfo.tension} onChange={(e) => { setPatientInfo({ ...patientInfo, tension: e.target.value }) }} width={50} className="col form-control" />
+                                                    <input type="text" width={50} value={patientInfo.oxygene} onChange={(e) => { setPatientInfo({ ...patientInfo, oxygene: e.target.value }) }} className="col form-control" />
+                                                    <input type="number" width={50} value={patientInfo.poids} onChange={(e) => { setPatientInfo({ ...patientInfo, poids: e.target.value }) }} className="col form-control" />
                                                 </div>
                                             </div>
                                         </div>
@@ -373,14 +318,21 @@ function CreateFact() {
                                 <h5 className="card-title">Médicaments</h5>
                                 <p className="card-text">
                                     <form className="d-flex" role="search" onSubmit={onSearchMedicament}>
-                                        <input className="form-control me-2" type="search" placeholder="Recherche" aria-label="Recherche" value={searchMedicament} onChange={onChangeSearchMedicament} />
+                                        <input className="form-control me-2" type="search" placeholder="Recherche" aria-label="Recherche" value={searchMedicament} onChange={(e) => {
+                                            if (e.target.value == '') {
+                                                setIsSearchMedicament(false);
+                                                setSelectedMed(null);
+                                                setValidatedMed(false);
+                                            }
+                                            setSearchMedicament(e.target.value);
+                                        }} />
                                         <button className="btn btn-outline-success" type="submit" >Recherche</button>
                                     </form>
                                 </p>
                                 <div className="card-text">
                                     {
                                         isSearchMedicament &&
-                                        <div className="card" style={{maxHeight:'100px',overflowY:'scroll'}}>
+                                        <div className="card" style={{ maxHeight: '100px', overflowY: 'scroll' }}>
                                             <ol className="list-group list-group-numbered">
                                                 {dataMedicament && dataMedicament.map((value) => {
                                                     return (
@@ -414,7 +366,7 @@ function CreateFact() {
                                             <label for="bilan" className="form-label">
                                                 Quantité
                                             </label>
-                                            <input type="number" style={{ color: !validQtMed ? 'red' : 'black' }} id="bilan" className="form-control" value={quantite} onChange={onChangeQuantite} />
+                                            <input type="number" style={{ color: !validQtMed ? 'red' : 'black' }} id="bilan" className="form-control" value={medicamentInfo.quantite} onChange={onChangeQuantite} />
                                             {
                                                 !validQtMed &&
                                                 <div style={{ color: 'red' }}>
@@ -427,7 +379,7 @@ function CreateFact() {
                                             <label for="bilan" className="form-label">
                                                 Mode d'utilisation
                                             </label>
-                                            <textarea rows={3} type="text" id="bilan" className="form-control" value={mode} onChange={onChangeMode} />
+                                            <textarea rows={3} type="text" id="bilan" className="form-control" value={medicamentInfo.mode} onChange={(e) => { setMedicamentInfo({ ...medicamentInfo, mode: e.target.value }) }} />
                                         </div>
                                         <button className="btn btn-primary" disabled={!validatedMed} type="onSubmit">Ajouter</button>
                                     </form>
@@ -471,7 +423,7 @@ function CreateFact() {
                             <div className="card-text">
                                 <div className="mb-3">
                                     <label className="form-label" for="consultation">Prix du consultation</label>
-                                    <input className="form-control" type="number" onChange={onChangeConsultation} value={consultation} id="consultation"/>
+                                    <input className="form-control" type="number" onChange={(e)=>{setMedicamentInfo({...medicamentInfo, consultation: e.target.value})}} value={medicamentInfo.consultation} id="consultation" />
                                 </div>
                             </div>
                             <div className="card-text display-flex">

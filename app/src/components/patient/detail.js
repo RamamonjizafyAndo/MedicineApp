@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
-import BilanPatient from "./bilan";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../hooks/contextPatient";
 
@@ -10,8 +9,6 @@ function DetailPatient() {
     const [dataPatient, setDataPatient] = useState([]);
     const [onSuppr, setOnSuppr] = useState(false);
     useEffect(() => {
-        console.log(idUser);
-        console.log(dataPatient);
         if (idUser) {
             ipcRenderer.send('select-data', 'SELECT * FROM Patients WHERE idPtn = ?', [idUser]);
         }
@@ -24,13 +21,14 @@ function DetailPatient() {
         return () => {
             ipcRenderer.removeListener('select-data-reply', handleSelectDataReply);
         };        
-    }, [idUser, dataPatient]);
+    }, [idUser]);
     
     const onDelete = (e) => {
         e.preventDefault();
         ipcRenderer.send('delete-patient', { value1: idUser});
         navigate('/patient');
     }
+    
     return (
         <>
             <p className="text-center title">
@@ -45,6 +43,9 @@ function DetailPatient() {
                                     <p className="card-text">Nom: {value.namePtn}</p>
                                     <p className="card-text">Age: {value.agePtn}</p>
                                     <p className="card-text">Sexe: {value.sexePtn}</p>
+                                    <p>
+                                        <button className="p-2 g-col-6 btn btn-outline-primary" onClick={(e)=>{navigate('/patient/bilan')}}>Bilan</button>
+                                    </p>
                                     <p>
                                         <button className="p-2 g-col-6 btn btn-outline-primary" onClick={(e)=>{navigate('/patient/modif')}}>Modifier</button>
                                     </p>

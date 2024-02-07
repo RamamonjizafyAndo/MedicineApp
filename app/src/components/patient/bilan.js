@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
+import { UserContext } from "../../hooks/contextPatient";
+import { useNavigate } from "react-router-dom";
 
 function BilanPatient() {
     const [data, setData] = useState([]);
+    const navigate = useNavigate();
+    const {idUser, changeOrdonnance} = useContext(UserContext);
     useEffect(() => {
-        const idPtn = localStorage.getItem('idPtn');
-        if (idPtn) {
-            ipcRenderer.send('select-data', 'SELECT * FROM BilanPatients WHERE idPtn = ?', [idPtn]);
+        if (idUser) {
+            ipcRenderer.send('select-data', 'SELECT ref, maladie FROM Ordonnances WHERE idPtn = ?', [idUser]);
         }
     
         const handleSelectDataReply = (event, response) => {
@@ -19,7 +22,13 @@ function BilanPatient() {
         return () => {
             ipcRenderer.removeListener('select-data-reply', handleSelectDataReply);
         };
-    }, [localStorage.getItem('idPtn')]);
+    }, [idUser]);
+    const onShowDetail = async(e)=>{
+        await changeOrdonnance(e.currentTarget.id);
+        setTimeout(()=>{
+            navigate('/fact/detail');
+        },500)
+    }
     return (
         <>
             <p className="text-center">
@@ -34,7 +43,7 @@ function BilanPatient() {
                                     <div className="fw-bold">{value.maladie}</div>
                                 </div>
                                 <span className="badge">
-                                    <button className="btn btn-outline-danger"><i className="bi bi-ticket-detailed-fill"></i>Voir</button>
+                                    <button className="btn btn-outline-danger" id={value.ref} onClick={onShowDetail}><i className="bi bi-ticket-detailed-fill"></i>Voir</button>
                                 </span>
                             </li>
                         )
